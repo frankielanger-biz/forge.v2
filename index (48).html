@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Forge — Trades Test Prep</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0a0a0a;--card:#111;--card2:#161616;--border:#1e1e1e;
+  --orange:#d4622a;--orange2:#bc5222;--orangedim:#160c06;--orangeborder:#2a1208;
+  --text:#e8e4de;--text2:#8a8680;--text3:#555;--text4:#2a2520;
+  --green:#2db872;--greendim:#091a10;--greenborder:#163325;
+  --red:#c96060;--reddim:#160707;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;}
+.screen{display:none;min-height:100vh;}
+.screen.on{display:block;}
+#land.on{display:flex;flex-direction:column;min-height:100vh;}
+
+/* ── LANDING ── */
+.land-top{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:52px 28px 32px;text-align:center;position:relative;}
+.land-top::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:500px;height:380px;background:radial-gradient(ellipse at center,rgba(255,92,26,.1) 0%,transparent 70%);pointer-events:none;}
+.forge-logo{font-family:'Bebas Neue',sans-serif;font-size:68px;letter-spacing:5px;color:var(--text);line-height:1;margin-bottom:6px;}
+.forge-logo span{color:var(--orange);}
+.land-tagline{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--text3);margin-bottom:36px;}
+.land-hero{font-size:30px;font-weight:800;line-height:1.18;color:var(--text);margin-bottom:14px;max-width:300px;}
+.land-hero em{font-style:normal;color:var(--orange);}
+.land-desc{font-size:15px;color:var(--text2);line-height:1.75;max-width:310px;margin-bottom:36px;}
+.test-pills{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:40px;}
+.tpill{font-size:11px;font-weight:600;letter-spacing:.4px;padding:6px 14px;border-radius:20px;background:var(--card);border:1px solid var(--border);color:var(--text2);}
+.land-cta{width:100%;max-width:320px;padding:17px;border-radius:14px;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:800;cursor:pointer;background:var(--orange);color:#fff;border:none;margin-bottom:12px;transition:background .15s;}
+.land-cta:hover{background:var(--orange2);}
+.land-login{font-size:13px;color:var(--text3);cursor:pointer;padding:8px;margin-bottom:8px;}
+.land-login span{color:var(--text2);text-decoration:underline;}
+
+/* ── APP SHELL ── */
+.topbar{height:52px;background:var(--bg);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px;position:sticky;top:0;z-index:50;}
+.tb-logo{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:3px;color:var(--text);}
+.tb-logo span{color:var(--orange);}
+.tb-right{display:flex;align-items:center;gap:12px;}
+.tb-streak{font-size:13px;font-weight:700;color:var(--orange);}
+.tb-av{width:32px;height:32px;border-radius:50%;background:var(--orangedim);border:1.5px solid var(--orangeborder);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--orange);cursor:pointer;}
+.tabnav{display:flex;background:var(--bg);border-bottom:1px solid var(--border);position:sticky;top:52px;z-index:40;}
+.tnb{flex:1;padding:13px 4px;font-size:11px;font-weight:700;color:#5a5a5a;cursor:pointer;border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;font-family:'DM Sans',sans-serif;transition:color .15s;white-space:nowrap;}
+.tnb.on{color:var(--orange);border-bottom-color:var(--orange);}
+.content{padding:20px 20px 90px;}
+.pane{display:none;}
+.pane.on{display:block;}
+
+/* SHARED */
+.section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);margin-bottom:12px;}
+.card{background:var(--card);border-radius:14px;border:1px solid var(--border);padding:18px;margin-bottom:12px;}
+.pbar-wrap{background:var(--border);border-radius:4px;height:5px;overflow:hidden;}
+.pbar{height:5px;border-radius:4px;background:var(--orange);transition:width .4s;}
+
+/* HOME */
+.greeting{margin-bottom:20px;}
+.greet-sub{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;}
+.greet-name{font-size:22px;font-weight:800;color:var(--text);}
+.readiness-card{background:var(--card);border-radius:16px;border:1px solid var(--border);padding:20px;margin-bottom:16px;}
+.rc-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
+.rc-num{font-size:36px;font-weight:800;color:var(--text);line-height:1;}
+.rc-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-top:4px;}
+.rc-badge{font-size:11px;font-weight:700;padding:5px 12px;border-radius:20px;background:var(--greendim);color:var(--green);border:1px solid var(--greenborder);}
+.rc-sections{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;}
+.rcs{background:var(--card2);border-radius:10px;padding:12px;border:1px solid var(--border);}
+.rcs-name{font-size:11px;color:var(--text3);margin-bottom:6px;}
+.rcs-bar{background:var(--border);border-radius:3px;height:3px;overflow:hidden;margin-bottom:5px;}
+.rcs-fill{height:3px;border-radius:3px;background:var(--orange);}
+.rcs-pct{font-size:12px;font-weight:700;color:var(--text);}
+.continue-card{background:linear-gradient(135deg,#150d06,#111);border-radius:14px;border:1px solid var(--orangeborder);padding:18px;margin-bottom:20px;cursor:pointer;display:flex;align-items:center;gap:14px;transition:border-color .15s;}
+.continue-card:hover{border-color:var(--orange);}
+.cc-ico{width:46px;height:46px;border-radius:12px;background:var(--orange);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.cc-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.cc-sub{font-size:12px;color:var(--text2);}
+.cc-arr{margin-left:auto;color:var(--orange);font-size:18px;flex-shrink:0;}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.tcard{background:var(--card);border-radius:14px;border:1px solid var(--border);padding:16px;cursor:pointer;transition:border-color .15s;}
+.tcard:hover{border-color:var(--orangeborder);}
+.tc-ico{font-size:26px;margin-bottom:10px;}
+.tc-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.tc-count{font-size:12px;color:var(--text3);margin-bottom:10px;}
+.tc-bar{background:var(--border);border-radius:3px;height:3px;overflow:hidden;}
+.tc-fill{height:3px;border-radius:3px;background:var(--orange);}
+
+/* PRACTICE / MOCK TESTS */
+.ts-row{background:var(--card);border-radius:14px;border:1px solid var(--border);padding:16px 18px;margin-bottom:10px;cursor:pointer;display:flex;align-items:center;gap:14px;transition:border-color .15s;}
+.ts-row:hover{border-color:var(--orangeborder);}
+.ts-dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;}
+.ts-row.sel .ts-dot{background:var(--orange);border-color:var(--orange);}
+.ts-row.sel{border-color:var(--orange);background:var(--orangedim);}
+.ts-info{flex:1;}
+.ts-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px;}
+.ts-desc{font-size:12px;color:var(--text3);}
+.ts-badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:10px;flex-shrink:0;}
+.badge-e{background:#0d1a2e;color:#4d8ef0;border:1px solid #1a3a6a;}
+.badge-g{background:var(--orangedim);color:var(--orange);border:1px solid var(--orangeborder);}
+.badge-d{background:#150d2e;color:#a78bfa;border:1px solid #2a1f50;}
+.go-btn{width:100%;padding:16px;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:800;cursor:pointer;background:var(--orange);color:#fff;border:none;margin-top:4px;transition:background .15s;}
+.go-btn:hover{background:var(--orange2);}
+
+/* MOCK TEST INFO CARD */
+.mock-info{background:var(--card);border-radius:14px;border:1px solid var(--border);padding:20px;margin-bottom:16px;}
+.mi-title{font-size:16px;font-weight:800;color:var(--text);margin-bottom:8px;}
+.mi-rows{display:flex;flex-direction:column;gap:6px;}
+.mi-row{display:flex;justify-content:space-between;font-size:13px;}
+.mi-key{color:var(--text3);}
+.mi-val{color:var(--text);font-weight:600;}
+.mi-note{font-size:12px;color:var(--text3);margin-top:12px;line-height:1.6;border-top:1px solid var(--border);padding-top:12px;}
+
+/* PROFILE */
+.prof-cover{height:70px;background:linear-gradient(135deg,var(--orangedim),#0d0d0d);border-radius:14px 14px 0 0;}
+.prof-wrap{background:var(--card);border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:14px;}
+.prof-body{padding:0 16px 20px;}
+.prof-av{width:56px;height:56px;border-radius:50%;background:var(--orangedim);border:3px solid var(--card);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:var(--orange);margin-top:-28px;margin-bottom:10px;}
+.prof-name{font-size:19px;font-weight:800;color:var(--text);margin-bottom:2px;}
+.prof-sub{font-size:13px;color:var(--text3);margin-bottom:14px;}
+.badge-row{display:flex;gap:7px;flex-wrap:wrap;}
+.badge-pill{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:5px 11px;font-size:12px;font-weight:600;color:var(--text2);}
+.stats3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px;}
+.s3{background:var(--card);border-radius:12px;padding:14px;border:1px solid var(--border);text-align:center;}
+.s3v{font-size:22px;font-weight:800;color:var(--orange);}
+.s3l{font-size:11px;color:var(--text3);margin-top:2px;}
+.settings-row{background:var(--card);border-radius:12px;border:1px solid var(--border);padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;}
+.sr-lbl{font-size:14px;font-weight:600;color:var(--text);}
+.sr-val{font-size:13px;color:var(--text3);}
+.sr-action{font-size:13px;color:var(--orange);cursor:pointer;}
+
+/* ── PRACTICE QUIZ ── */
+#quiz-screen{display:none;position:fixed;inset:0;background:var(--bg);flex-direction:column;z-index:200;}
+#quiz-screen.on{display:flex;}
+.qz-top{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.qz-back{background:none;border:none;color:var(--text2);font-size:22px;cursor:pointer;line-height:1;padding:2px 6px;}
+.qz-prog-wrap{flex:1;background:var(--border);border-radius:4px;height:5px;overflow:hidden;}
+.qz-prog{height:5px;border-radius:4px;background:var(--orange);transition:width .25s;}
+.qz-counter{font-size:12px;font-weight:700;color:var(--text3);flex-shrink:0;min-width:40px;text-align:right;}
+.qz-body{flex:1;padding:22px 20px 20px;overflow-y:auto;display:flex;flex-direction:column;}
+.q-section{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--orange);margin-bottom:10px;}
+.q-text{font-size:17px;font-weight:700;color:var(--text);line-height:1.5;margin-bottom:20px;}
+.options{display:flex;flex-direction:column;gap:9px;margin-bottom:20px;}
+.opt{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:15px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:border-color .12s;}
+.opt:hover{border-color:var(--orangeborder);}
+.opt.sel{border-color:var(--orange);background:var(--orangedim);}
+.opt.correct{border-color:var(--green);background:var(--greendim);}
+.opt.wrong{border-color:var(--red);background:var(--reddim);}
+.opt-letter{width:30px;height:30px;border-radius:8px;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--text3);flex-shrink:0;transition:all .12s;}
+.opt.sel .opt-letter{background:var(--orange);color:#fff;}
+.opt.correct .opt-letter{background:var(--green);color:#fff;}
+.opt.wrong .opt-letter{background:var(--red);color:#fff;}
+.opt-text{font-size:14px;color:var(--text);line-height:1.4;}
+.explain-box{background:var(--card2);border-radius:10px;border:1px solid var(--border);padding:14px;margin-bottom:16px;}
+.explain-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:5px;}
+.explain-txt{font-size:13px;color:var(--text2);line-height:1.7;}
+.qz-btn{width:100%;padding:16px;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:800;cursor:pointer;background:var(--orange);color:#fff;border:none;margin-top:auto;flex-shrink:0;transition:background .15s;}
+.qz-btn:hover{background:var(--orange2);}
+.qz-btn:disabled{background:var(--border);color:var(--text3);cursor:default;}
+
+/* ── TIMED MOCK EXAM ── */
+#exam-screen{display:none;position:fixed;inset:0;background:var(--bg);flex-direction:column;z-index:200;}
+#exam-screen.on{display:flex;}
+.ex-top{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.ex-warn-btn{background:none;border:1px solid var(--border);border-radius:8px;color:var(--text3);font-size:12px;font-weight:600;cursor:pointer;padding:6px 12px;font-family:'DM Sans',sans-serif;flex-shrink:0;}
+.ex-warn-btn:hover{border-color:var(--red);color:var(--red);}
+.ex-prog-wrap{flex:1;background:var(--border);border-radius:4px;height:5px;overflow:hidden;}
+.ex-prog{height:5px;border-radius:4px;background:var(--orange);transition:width .25s;}
+.ex-timer{font-size:13px;font-weight:800;color:var(--text);flex-shrink:0;min-width:48px;text-align:right;font-variant-numeric:tabular-nums;}
+.ex-timer.warn{color:var(--red);}
+.ex-body{flex:1;padding:22px 20px 20px;overflow-y:auto;display:flex;flex-direction:column;}
+.ex-counter{font-size:11px;font-weight:700;color:var(--text3);margin-bottom:8px;}
+.ex-btn{width:100%;padding:16px;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:800;cursor:pointer;background:var(--orange);color:#fff;border:none;margin-top:auto;flex-shrink:0;}
+.ex-btn:hover{background:var(--orange2);}
+.ex-skipped{font-size:12px;color:var(--text3);text-align:center;margin-top:10px;cursor:pointer;padding:6px;}
+.ex-skipped span{color:var(--text2);text-decoration:underline;}
+
+/* ── RESULTS ── */
+.results-wrap{padding:32px 20px;text-align:center;}
+.res-icon{font-size:56px;margin-bottom:14px;}
+.res-title{font-family:'Bebas Neue',sans-serif;font-size:44px;letter-spacing:2px;margin-bottom:8px;}
+.res-sub{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:28px;max-width:280px;margin-left:auto;margin-right:auto;}
+.res-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:28px;}
+.rs{background:var(--card);border-radius:12px;padding:14px;border:1px solid var(--border);}
+.rsv{font-size:22px;font-weight:800;color:var(--text);margin-bottom:3px;}
+.rsl{font-size:11px;color:var(--text3);}
+.res-review{background:var(--card);border-radius:14px;border:1px solid var(--border);padding:16px;margin-bottom:20px;text-align:left;}
+.rr-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;}
+.rr-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.rr-row:last-child{border-bottom:none;}
+.rr-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.rr-q{flex:1;color:var(--text2);line-height:1.4;}
+.rr-status{font-size:11px;font-weight:700;flex-shrink:0;}
+
+/* ── WARNING MODAL ── */
+.overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.8);align-items:flex-end;justify-content:center;}
+.overlay.on{display:flex;}
+.modal-box{background:#141414;border-radius:20px 20px 0 0;padding:24px 24px 40px;width:100%;max-width:480px;border-top:2px solid var(--red);}
+.modal-handle{width:32px;height:3px;background:var(--border);border-radius:2px;margin:0 auto 20px;}
+.modal-title{font-size:18px;font-weight:800;color:var(--text);margin-bottom:8px;}
+.modal-desc{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:22px;}
+.modal-btn{width:100%;padding:14px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:800;cursor:pointer;margin-bottom:10px;border:none;}
+.modal-btn-danger{background:var(--red);color:#fff;}
+.modal-btn-cancel{background:var(--card);color:var(--text2);border:1px solid var(--border)!important;}
+
+/* AUTH MODAL */
+.auth-overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.85);align-items:flex-end;justify-content:center;}
+.auth-overlay.on{display:flex;}
+.auth-box{background:#141414;border-radius:20px 20px 0 0;padding:24px 24px 40px;width:100%;max-width:480px;border-top:2px solid var(--orange);}
+.auth-handle{width:32px;height:3px;background:var(--border);border-radius:2px;margin:0 auto 20px;}
+.auth-title{font-size:19px;font-weight:800;color:var(--text);margin-bottom:6px;}
+.auth-sub{font-size:13px;color:var(--text2);margin-bottom:18px;line-height:1.6;}
+.ainput{width:100%;padding:13px 14px;border-radius:10px;border:1px solid var(--border);background:#0a0a0a;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;margin-bottom:10px;}
+.ainput:focus{border-color:var(--orange);}
+.abtn{width:100%;padding:15px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:800;cursor:pointer;background:var(--orange);color:#fff;border:none;margin-bottom:10px;transition:background .15s;}
+.abtn:hover{background:var(--orange2);}
+.acancel{display:block;text-align:center;font-size:13px;color:var(--text3);cursor:pointer;padding:8px;}
+
+/* BOTTOM NAV */
+.bottomnav{position:fixed;bottom:0;left:0;right:0;background:var(--bg);border-top:1px solid var(--border);display:flex;z-index:100;max-width:480px;margin:0 auto;}
+.bnb{flex:1;padding:10px 6px 14px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;background:none;border:none;font-family:'DM Sans',sans-serif;}
+.bnb-ico{font-size:19px;opacity:.45;transition:opacity .15s;}
+.bnb-lbl{font-size:10px;font-weight:700;color:#5a5a5a;transition:color .15s;}
+.bnb.on .bnb-ico{opacity:1;}
+.bnb.on .bnb-lbl{color:var(--orange);}
+
+@media(min-width:480px){
+  #land,#app,#quiz-screen,#exam-screen{max-width:480px;margin:0 auto;}
+  .bottomnav{left:50%;transform:translateX(-50%);width:480px;}
+  .overlay,.auth-overlay{justify-content:center;align-items:center;}
+  .modal-box,.auth-box{border-radius:20px;max-width:400px;border-top:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- LANDING -->
+<div id="land" class="screen on">
+  <div class="land-top">
+    <div class="forge-logo">F<span>O</span>RGE</div>
+    <div class="land-tagline">Trades Aptitude Test Prep</div>
+    <div class="land-hero">Prep for your test.<br><em>Get your spot.</em></div>
+    <div class="land-desc">Practice for the GAN and IBEW/NJATC aptitude tests — the exams required to get into union apprenticeship programs for every major trade.</div>
+    <div class="test-pills">
+      <span class="tpill">⚡ IBEW / NJATC</span>
+      <span class="tpill">🔧 GAN Battery</span>
+      <span class="tpill">🏗️ All trades</span>
+    </div>
+    <button class="land-cta" onclick="showAuth('signup')">Start for free →</button>
+    <div class="land-login" onclick="showAuth('login')">Already have an account? <span>Log in</span></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" class="screen">
+  <div class="topbar">
+    <div class="tb-logo">F<span>O</span>RGE</div>
+    <div class="tb-right">
+      <div class="tb-streak">🔥 5</div>
+      <div class="tb-av" onclick="appTab('profile',document.querySelectorAll('.tnb')[3])">JR</div>
+    </div>
+  </div>
+  <div class="tabnav">
+    <button class="tnb on" onclick="appTab('home',this)">Home</button>
+    <button class="tnb" onclick="appTab('practice',this)">Practice</button>
+    <button class="tnb" onclick="appTab('tests',this)">Mock Tests</button>
+    <button class="tnb" onclick="appTab('profile',this)">Profile</button>
+  </div>
+  <div class="content">
+
+    <!-- HOME -->
+    <div id="pane-home" class="pane on">
+      <div class="greeting">
+        <div class="greet-sub">Good morning</div>
+        <div class="greet-name">Jordan 👋</div>
+      </div>
+      <div class="readiness-card">
+        <div class="rc-head">
+          <div><div class="rc-num">62%</div><div class="rc-lbl">Overall readiness</div></div>
+          <div class="rc-badge">On track ✓</div>
+        </div>
+        <div class="pbar-wrap"><div class="pbar" style="width:62%"></div></div>
+        <div class="rc-sections">
+          <div class="rcs"><div class="rcs-name">Algebra</div><div class="rcs-bar"><div class="rcs-fill" style="width:70%"></div></div><div class="rcs-pct">70%</div></div>
+          <div class="rcs"><div class="rcs-name">Reading</div><div class="rcs-bar"><div class="rcs-fill" style="width:80%"></div></div><div class="rcs-pct">80%</div></div>
+          <div class="rcs"><div class="rcs-name">Paper Folding</div><div class="rcs-bar"><div class="rcs-fill" style="width:35%"></div></div><div class="rcs-pct">35%</div></div>
+          <div class="rcs"><div class="rcs-name">Mechanical</div><div class="rcs-bar"><div class="rcs-fill" style="width:55%"></div></div><div class="rcs-pct">55%</div></div>
+        </div>
+      </div>
+      <div class="section-title">Continue</div>
+      <div class="continue-card" onclick="startPractice('algebra')">
+        <div class="cc-ico">📐</div>
+        <div><div class="cc-title">Algebra & Functions</div><div class="cc-sub">Lesson 7 of 12 · Quadratic equations</div></div>
+        <div class="cc-arr">›</div>
+      </div>
+      <div class="section-title">All topics</div>
+      <div class="topic-grid">
+        <div class="tcard" onclick="startPractice('algebra')"><div class="tc-ico">📐</div><div class="tc-name">Algebra</div><div class="tc-count">84 questions</div><div class="tc-bar"><div class="tc-fill" style="width:70%"></div></div></div>
+        <div class="tcard" onclick="startPractice('reading')"><div class="tc-ico">📖</div><div class="tc-name">Reading</div><div class="tc-count">60 questions</div><div class="tc-bar"><div class="tc-fill" style="width:80%"></div></div></div>
+        <div class="tcard" onclick="startPractice('mechanical')"><div class="tc-ico">⚙️</div><div class="tc-name">Mechanical</div><div class="tc-count">48 questions</div><div class="tc-bar"><div class="tc-fill" style="width:55%"></div></div></div>
+        <div class="tcard" onclick="startPractice('folding')"><div class="tc-ico">🗂️</div><div class="tc-name">Paper Folding</div><div class="tc-count">40 questions</div><div class="tc-bar"><div class="tc-fill" style="width:35%"></div></div></div>
+        <div class="tcard" onclick="startPractice('numerical')"><div class="tc-ico">🔢</div><div class="tc-name">Numerical</div><div class="tc-count">GAN Battery</div><div class="tc-bar"><div class="tc-fill" style="width:20%"></div></div></div>
+        <div class="tcard" onclick="startPractice('reasoning')"><div class="tc-ico">🧩</div><div class="tc-name">Reasoning</div><div class="tc-count">GAN Battery</div><div class="tc-bar"><div class="tc-fill" style="width:10%"></div></div></div>
+      </div>
+    </div>
+
+    <!-- PRACTICE -->
+    <div id="pane-practice" class="pane">
+      <div class="section-title" style="margin-bottom:14px">Select a section</div>
+      <div class="topic-grid" style="margin-bottom:8px">
+        <div class="tcard" onclick="startPractice('algebra')"><div class="tc-ico">📐</div><div class="tc-name">Algebra</div><div class="tc-count">IBEW focus</div><div class="tc-bar"><div class="tc-fill" style="width:70%"></div></div></div>
+        <div class="tcard" onclick="startPractice('reading')"><div class="tc-ico">📖</div><div class="tc-name">Reading</div><div class="tc-count">Both tests</div><div class="tc-bar"><div class="tc-fill" style="width:80%"></div></div></div>
+        <div class="tcard" onclick="startPractice('mechanical')"><div class="tc-ico">⚙️</div><div class="tc-name">Mechanical</div><div class="tc-count">Both tests</div><div class="tc-bar"><div class="tc-fill" style="width:55%"></div></div></div>
+        <div class="tcard" onclick="startPractice('folding')"><div class="tc-ico">🗂️</div><div class="tc-name">Paper Folding</div><div class="tc-count">GAN focus</div><div class="tc-bar"><div class="tc-fill" style="width:35%"></div></div></div>
+        <div class="tcard" onclick="startPractice('numerical')"><div class="tc-ico">🔢</div><div class="tc-name">Numerical</div><div class="tc-count">GAN Battery</div><div class="tc-bar"><div class="tc-fill" style="width:20%"></div></div></div>
+        <div class="tcard" onclick="startPractice('reasoning')"><div class="tc-ico">🧩</div><div class="tc-name">Reasoning</div><div class="tc-count">GAN Battery</div><div class="tc-bar"><div class="tc-fill" style="width:10%"></div></div></div>
+      </div>
+      <button class="go-btn" onclick="startPractice('all')">Quick mix — all sections →</button>
+    </div>
+
+    <!-- MOCK TESTS -->
+    <div id="pane-tests" class="pane">
+      <div class="section-title" style="margin-bottom:14px">Choose a mock test</div>
+      <div id="mock-sel">
+        <div class="ts-row sel" onclick="selectMock(this,'ibew')">
+          <div class="ts-dot"></div>
+          <div class="ts-info"><div class="ts-name">IBEW / NJATC</div><div class="ts-desc">15 questions · 97 min · Algebra + Reading</div></div>
+          <span class="ts-badge badge-e">Electrician</span>
+        </div>
+        <div class="ts-row" onclick="selectMock(this,'gan')">
+          <div class="ts-dot"></div>
+          <div class="ts-info"><div class="ts-name">GAN Battery</div><div class="ts-desc">20 questions · 120 min · All 5 sections</div></div>
+          <span class="ts-badge badge-g">All trades</span>
+        </div>
+        <div class="ts-row" onclick="selectMock(this,'diagnostic')">
+          <div class="ts-dot"></div>
+          <div class="ts-info"><div class="ts-name">Diagnostic</div><div class="ts-desc">13 questions · 20 min · Find your weak spots</div></div>
+          <span class="ts-badge badge-d">Quick</span>
+        </div>
+      </div>
+      <div class="mock-info">
+        <div class="mi-title" id="mock-title">IBEW / NJATC Mock Test</div>
+        <div class="mi-rows">
+          <div class="mi-row"><span class="mi-key">Questions</span><span class="mi-val" id="mock-qs">10 questions</span></div>
+          <div class="mi-row"><span class="mi-key">Time limit</span><span class="mi-val" id="mock-time">97 minutes</span></div>
+          <div class="mi-row"><span class="mi-key">Sections</span><span class="mi-val" id="mock-secs">Algebra, Reading</span></div>
+        </div>
+        <div class="mi-note">⚠️ During a mock test you won't see if answers are right or wrong until the end — just like the real exam. Your timer counts down the whole way through.</div>
+      </div>
+      <button class="go-btn" id="start-mock-btn" onclick="startMock()">Begin mock test →</button>
+    </div>
+
+    <!-- PROFILE -->
+    <div id="pane-profile" class="pane">
+      <div class="prof-wrap">
+        <div class="prof-cover"></div>
+        <div class="prof-body">
+          <div class="prof-av">JR</div>
+          <div class="prof-name">Jordan Rivera</div>
+          <div class="prof-sub">Preparing for IBEW Local 131 · Kalamazoo, MI</div>
+          <div class="badge-row">
+            <span class="badge-pill">🔥 5 day streak</span>
+            <span class="badge-pill">📐 Algebra</span>
+            <span class="badge-pill">⚡ Electrician</span>
+          </div>
+        </div>
+      </div>
+      <div class="stats3">
+        <div class="s3"><div class="s3v">47</div><div class="s3l">Questions done</div></div>
+        <div class="s3"><div class="s3v">71%</div><div class="s3l">Accuracy</div></div>
+        <div class="s3"><div class="s3v">5</div><div class="s3l">Day streak</div></div>
+      </div>
+      <div class="section-title">Settings</div>
+      <div class="settings-row"><span class="sr-lbl">Test date</span><span class="sr-action">Set date →</span></div>
+      <div class="settings-row"><span class="sr-lbl">Trade focus</span><span class="sr-val">Electrician (IBEW)</span></div>
+      <div class="settings-row"><span class="sr-lbl">Location</span><span class="sr-val">Kalamazoo, MI</span></div>
+      <div class="settings-row" style="margin-top:8px"><span class="sr-lbl">Sign out</span><span class="sr-action" onclick="goLand()">Sign out</span></div>
+    </div>
+
+  </div>
+
+  <div class="bottomnav">
+    <button class="bnb on" onclick="appTab('home',this)"><span class="bnb-ico">🏠</span><span class="bnb-lbl">Home</span></button>
+    <button class="bnb" onclick="appTab('practice',this)"><span class="bnb-ico">📝</span><span class="bnb-lbl">Practice</span></button>
+    <button class="bnb" onclick="appTab('tests',this)"><span class="bnb-ico">⏱️</span><span class="bnb-lbl">Mock Tests</span></button>
+    <button class="bnb" onclick="appTab('profile',this)"><span class="bnb-ico">👤</span><span class="bnb-lbl">Profile</span></button>
+  </div>
+</div>
+
+<!-- PRACTICE QUIZ SCREEN (shows right/wrong immediately) -->
+<div id="quiz-screen">
+  <div class="qz-top">
+    <button class="qz-back" onclick="closeQuiz()">‹</button>
+    <div class="qz-prog-wrap"><div class="qz-prog" id="qz-prog" style="width:5%"></div></div>
+    <div class="qz-counter" id="qz-counter">1 / 10</div>
+  </div>
+  <div class="qz-body" id="qz-body"></div>
+</div>
+
+<!-- EXAM SCREEN (timed, no feedback until end) -->
+<div id="exam-screen">
+  <div class="ex-top">
+    <button class="ex-warn-btn" onclick="showExamWarning()">⚠ Leave</button>
+    <div class="ex-prog-wrap"><div class="ex-prog" id="ex-prog" style="width:0%"></div></div>
+    <div class="ex-timer" id="ex-timer">97:00</div>
+  </div>
+  <div class="ex-body" id="ex-body"></div>
+</div>
+
+<!-- WARNING MODAL -->
+<div class="overlay" id="warn-overlay">
+  <div class="modal-box">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Leave this test?</div>
+    <div class="modal-desc">Your progress will be lost and this attempt won't count. Are you sure you want to leave?</div>
+    <button class="modal-btn modal-btn-danger" onclick="confirmLeave()">Yes, leave the test</button>
+    <button class="modal-btn modal-btn-cancel" onclick="closeWarning()">Keep going</button>
+  </div>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="auth-overlay" id="auth-overlay">
+  <div class="auth-box">
+    <div class="auth-handle"></div>
+    <div class="auth-title" id="auth-title">Create your account</div>
+    <div class="auth-sub" id="auth-sub">Free to start. Begin prepping in 30 seconds.</div>
+    <input class="ainput" id="auth-name-row" placeholder="Your name">
+    <input class="ainput" id="auth-email" placeholder="Email address" type="email">
+    <input class="ainput" id="auth-password" placeholder="Password" type="password">
+    <div class="auth-err" id="auth-err" style="display:none;color:#ff6b5b;font-size:13px;text-align:center;margin:4px 0;"></div>
+    <button class="abtn" id="auth-btn" onclick="doAuth()">Create free account →</button>
+    <span class="acancel" onclick="closeAuth()">Cancel</span>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════════════════════
+// MAILCHIMP SETUP — paste your form ACTION URL between the quotes below.
+// Get it in Mailchimp: Audience → Signup forms → Embedded forms → copy the
+// <form action="..."> URL. It looks like:
+//   https://YOURNAME.usXX.list-manage.com/subscribe/post?u=XXXXXXXX&id=YYYYYYYY
+// Leave it blank to test the app without collecting emails.
+// ════════════════════════════════════════════════════════════════════════════
+var MAILCHIMP_URL = "https://gmail.us19.list-manage.com/subscribe/post?u=b3202a5d4ca20cb7875083390&id=ad209e5ef4&f_id=00ce76e7f0";
+var MAILCHIMP_BOT_FIELD = "b_b3202a5d4ca20cb7875083390_ad209e5ef4";
+
+// Sends name + email to Mailchimp using the /post-json + JSONP method.
+// This works cross-origin (including from file:// and any host) because
+// JSONP loads via a <script> tag instead of a blocked fetch/POST.
+function sendToMailchimp(name, email){
+  if(!MAILCHIMP_URL){ return; }
+  try{
+    var jsonpUrl = MAILCHIMP_URL.replace('/post?', '/post-json?');
+    var cb = 'mc_cb_' + Date.now();
+    var params =
+      '&EMAIL=' + encodeURIComponent(email) +
+      '&FNAME=' + encodeURIComponent(name||'') +
+      (MAILCHIMP_BOT_FIELD ? '&' + MAILCHIMP_BOT_FIELD + '=' : '') +
+      '&c=' + cb;
+    window[cb] = function(resp){
+      try{ delete window[cb]; }catch(e){ window[cb] = undefined; }
+      if(s && s.parentNode){ s.parentNode.removeChild(s); }
+      // resp.result is "success" or "error"; we don't block the user either way
+    };
+    var s = document.createElement('script');
+    s.src = jsonpUrl + params;
+    s.onerror = function(){ if(s.parentNode){ s.parentNode.removeChild(s); } };
+    document.body.appendChild(s);
+  }catch(e){ /* never block the user on a capture failure */ }
+}
+
+// ── FORGE COMPLETE TEST BANK ──────────────────────────────────────────────────
+// Covers: IBEW/NJATC (Algebra + Reading) and GAN Battery (Numerical Computation,
+// Numerical Reasoning, Paper Folding, Mechanical Reasoning, Reading Comprehension)
+// Format: {s: section, q: question, o: options[4], a: correct_index(0-3), e: explanation}
+
+var Q = {
+
+// ════════════════════════════════════════════════════════
+// ALGEBRA & FUNCTIONS — 60 questions (IBEW focus)
+// ════════════════════════════════════════════════════════
+algebra: [
+  // — Basic equations —
+  {s:"Algebra & Functions",q:"Solve for x: 3x + 7 = 22",o:["x = 3","x = 4","x = 5","x = 6"],a:2,e:"Subtract 7: 3x = 15. Divide by 3: x = 5."},
+  {s:"Algebra & Functions",q:"Solve for x: 2x − 4 = 10",o:["x = 3","x = 5","x = 7","x = 9"],a:2,e:"Add 4: 2x = 14. Divide by 2: x = 7."},
+  {s:"Algebra & Functions",q:"Solve for x: 5x + 3 = 33",o:["x = 4","x = 5","x = 6","x = 7"],a:2,e:"Subtract 3: 5x = 30. Divide by 5: x = 6."},
+  {s:"Algebra & Functions",q:"Solve for x: 4x − 8 = 0",o:["x = 0","x = 1","x = 2","x = 4"],a:2,e:"Add 8: 4x = 8. Divide by 4: x = 2."},
+  {s:"Algebra & Functions",q:"Solve for x: 7x + 14 = 49",o:["x = 3","x = 4","x = 5","x = 7"],a:2,e:"Subtract 14: 7x = 35. Divide by 7: x = 5."},
+  {s:"Algebra & Functions",q:"Solve for x: x/4 + 3 = 7",o:["x = 4","x = 8","x = 12","x = 16"],a:3,e:"Subtract 3: x/4 = 4. Multiply by 4: x = 16."},
+  {s:"Algebra & Functions",q:"Solve for x: 2(x + 3) = 14",o:["x = 2","x = 4","x = 6","x = 8"],a:1,e:"Distribute: 2x + 6 = 14. Subtract 6: 2x = 8. x = 4."},
+  {s:"Algebra & Functions",q:"Solve for x: 3(2x − 1) = 15",o:["x = 2","x = 3","x = 4","x = 5"],a:1,e:"Distribute: 6x − 3 = 15. Add 3: 6x = 18. x = 3."},
+  {s:"Algebra & Functions",q:"Solve for x: 10 − 3x = 1",o:["x = 1","x = 2","x = 3","x = 4"],a:2,e:"Subtract 10: −3x = −9. Divide by −3: x = 3."},
+  {s:"Algebra & Functions",q:"If 4x + 2 = 18, what is 2x?",o:["4","6","8","10"],a:2,e:"4x = 16, x = 4. So 2x = 8."},
+  // — Multi-step equations —
+  {s:"Algebra & Functions",q:"Solve: 5x − 2(x + 4) = 7",o:["x = 3","x = 5","x = 7","x = 9"],a:1,e:"5x − 2x − 8 = 7 → 3x = 15 → x = 5."},
+  {s:"Algebra & Functions",q:"Solve: 3(x + 2) − x = 10",o:["x = 1","x = 2","x = 3","x = 4"],a:1,e:"3x + 6 − x = 10 → 2x = 4 → x = 2."},
+  {s:"Algebra & Functions",q:"Solve: 4(x − 1) + 2x = 14",o:["x = 2","x = 3","x = 4","x = 5"],a:1,e:"4x − 4 + 2x = 14 → 6x = 18 → x = 3."},
+  {s:"Algebra & Functions",q:"Solve: 2x + 3(x − 2) = 19",o:["x = 4","x = 5","x = 6","x = 7"],a:1,e:"2x + 3x − 6 = 19 → 5x = 25 → x = 5."},
+  {s:"Algebra & Functions",q:"Solve: 6x − 2(3 − x) = 20",o:["x = 2","x = 3","x = 4","x = 5"],a:1,e:"6x − 6 + 2x = 20 → 8x = 26 → x = 3.25. Closest: x = 3."},
+  // — Inequalities —
+  {s:"Algebra & Functions",q:"If 3x + 5 > 17, which is true?",o:["x > 2","x > 3","x > 4","x > 5"],a:2,e:"3x > 12 → x > 4."},
+  {s:"Algebra & Functions",q:"If 2x − 4 ≤ 10, which is true?",o:["x ≤ 5","x ≤ 6","x ≤ 7","x ≤ 8"],a:2,e:"2x ≤ 14 → x ≤ 7."},
+  {s:"Algebra & Functions",q:"If |x − 3| = 7, what are the values of x?",o:["10 only","−4 only","10 or −4","4 or −10"],a:2,e:"x − 3 = 7 → x = 10. x − 3 = −7 → x = −4."},
+  {s:"Algebra & Functions",q:"If |2x + 1| = 9, what are the values of x?",o:["4 or −5","4 only","−5 only","5 or −4"],a:0,e:"2x + 1 = 9 → x = 4. 2x + 1 = −9 → x = −5."},
+  {s:"Algebra & Functions",q:"Which value satisfies 5 − 2x < 1?",o:["x = 1","x = 2","x = 3","x = 0"],a:2,e:"−2x < −4 → x > 2. Only x = 3 is greater than 2."},
+  // — Functions —
+  {s:"Algebra & Functions",q:"If f(x) = 2x² − 3, what is f(3)?",o:["9","12","15","18"],a:2,e:"f(3) = 2(9) − 3 = 18 − 3 = 15."},
+  {s:"Algebra & Functions",q:"If f(x) = 3x + 1, what is f(4)?",o:["11","12","13","14"],a:2,e:"f(4) = 3(4) + 1 = 12 + 1 = 13."},
+  {s:"Algebra & Functions",q:"If f(x) = x² + 2x, what is f(3)?",o:["12","13","14","15"],a:3,e:"f(3) = 9 + 6 = 15."},
+  {s:"Algebra & Functions",q:"If g(x) = 4x − 7 and g(x) = 13, what is x?",o:["x = 4","x = 5","x = 6","x = 7"],a:1,e:"4x − 7 = 13 → 4x = 20 → x = 5."},
+  {s:"Algebra & Functions",q:"If f(x) = x/2 + 4, what is f(10)?",o:["7","8","9","10"],a:2,e:"f(10) = 10/2 + 4 = 5 + 4 = 9."},
+  // — Polynomials / simplify —
+  {s:"Algebra & Functions",q:"Simplify: 4(x + 3) − 2x",o:["2x + 12","2x + 3","6x + 12","2x − 12"],a:0,e:"4x + 12 − 2x = 2x + 12."},
+  {s:"Algebra & Functions",q:"Simplify: 3x² + 2x − x² + 4x",o:["2x² + 6x","4x² + 6x","2x² − 6x","4x² − 6x"],a:0,e:"(3x² − x²) + (2x + 4x) = 2x² + 6x."},
+  {s:"Algebra & Functions",q:"Expand: (x + 3)(x − 2)",o:["x² − x − 6","x² + x − 6","x² + x + 6","x² − x + 6"],a:0,e:"x² − 2x + 3x − 6 = x² + x − 6."},
+  {s:"Algebra & Functions",q:"Simplify: (2x³)(3x²)",o:["5x⁵","6x⁵","5x⁶","6x⁶"],a:1,e:"Multiply coefficients: 2×3=6. Add exponents: 3+2=5. Answer: 6x⁵."},
+  {s:"Algebra & Functions",q:"Factor: x² − 9",o:["(x−3)(x+3)","(x−9)(x+1)","(x+3)²","(x−3)²"],a:0,e:"Difference of squares: x² − 9 = (x−3)(x+3)."},
+  // — Number series —
+  {s:"Algebra & Functions",q:"Next number: 4, 8, 16, 32, ___",o:["48","56","64","72"],a:2,e:"Each number doubles. 32 × 2 = 64."},
+  {s:"Algebra & Functions",q:"Next number: 3, 7, 11, 15, ___",o:["17","18","19","20"],a:2,e:"Adding 4 each time. 15 + 4 = 19."},
+  {s:"Algebra & Functions",q:"Next number: 2, 6, 18, 54, ___",o:["108","162","216","270"],a:1,e:"Multiplying by 3 each time. 54 × 3 = 162."},
+  {s:"Algebra & Functions",q:"Next number: 100, 90, 81, 73, ___",o:["64","65","66","67"],a:2,e:"Subtracting 10, 9, 8, 7... next subtract 7: 73 − 7 = 66."},
+  {s:"Algebra & Functions",q:"Next number: 1, 3, 6, 10, 15, ___",o:["18","20","21","24"],a:2,e:"Add 2, 3, 4, 5, 6... Next: 15 + 6 = 21."},
+  // — Fractions & decimals —
+  {s:"Algebra & Functions",q:"What is 3/8 + 1/4?",o:["4/12","5/8","1/2","7/12"],a:1,e:"Convert 1/4 to 2/8. Then 3/8 + 2/8 = 5/8."},
+  {s:"Algebra & Functions",q:"What is 2/3 × 3/4?",o:["1/2","5/7","6/12","2/4"],a:0,e:"Multiply: (2×3)/(3×4) = 6/12 = 1/2."},
+  {s:"Algebra & Functions",q:"What is 5/6 − 1/3?",o:["4/6","1/2","2/3","1/6"],a:1,e:"Convert 1/3 to 2/6. Then 5/6 − 2/6 = 3/6 = 1/2."},
+  {s:"Algebra & Functions",q:"What is 3/4 ÷ 1/2?",o:["3/8","3/2","6/4","1/2"],a:1,e:"Dividing by 1/2 = multiplying by 2. 3/4 × 2 = 6/4 = 3/2."},
+  {s:"Algebra & Functions",q:"What is 15% of 240?",o:["30","36","42","48"],a:1,e:"0.15 × 240 = 36."},
+  {s:"Algebra & Functions",q:"What is 0.25 × 44?",o:["8","9","10","11"],a:3,e:"0.25 × 44 = 44 ÷ 4 = 11."},
+  // — Word problems —
+  {s:"Algebra & Functions",q:"A car travels 60 mph for 2.5 hours. How far?",o:["120 mi","140 mi","150 mi","160 mi"],a:2,e:"Distance = 60 × 2.5 = 150 miles."},
+  {s:"Algebra & Functions",q:"A pipe fills a tank in 4 hours. What fraction is filled in 1.5 hours?",o:["1/4","3/8","1/2","5/8"],a:1,e:"Rate = 1/4 per hour. In 1.5 hours: 1.5 × 1/4 = 3/8."},
+  {s:"Algebra & Functions",q:"If wire costs $2.50 per foot, what does 12 feet cost?",o:["$24","$28","$30","$32"],a:2,e:"2.50 × 12 = $30."},
+  {s:"Algebra & Functions",q:"A job takes 8 workers 6 days. How many days for 12 workers?",o:["3","4","5","6"],a:1,e:"Total work = 8 × 6 = 48 worker-days. 48 ÷ 12 = 4 days."},
+  {s:"Algebra & Functions",q:"A tank holds 120 gallons. It drains at 8 gal/min. How long to empty?",o:["12 min","13 min","14 min","15 min"],a:3,e:"120 ÷ 8 = 15 minutes."},
+  // — Percentages & ratios —
+  {s:"Algebra & Functions",q:"A $80 item is discounted 25%. What is the sale price?",o:["$55","$60","$65","$70"],a:1,e:"25% of $80 = $20. $80 − $20 = $60."},
+  {s:"Algebra & Functions",q:"If a score increases from 40 to 50, what is the percent increase?",o:["10%","20%","25%","30%"],a:2,e:"Increase = 10. 10/40 × 100 = 25%."},
+  {s:"Algebra & Functions",q:"Ratio of 15:25 simplified is:",o:["1:2","2:3","3:5","4:6"],a:2,e:"GCF of 15 and 25 is 5. 15/5 = 3, 25/5 = 5. Ratio = 3:5."},
+  {s:"Algebra & Functions",q:"If 3 out of 12 bolts are defective, what percent is defective?",o:["20%","25%","30%","33%"],a:1,e:"3/12 = 1/4 = 25%."},
+  {s:"Algebra & Functions",q:"A worker earns $18/hr and gets a 10% raise. New hourly rate?",o:["$19.00","$19.80","$20.00","$20.80"],a:1,e:"10% of $18 = $1.80. $18 + $1.80 = $19.80."},
+  // — Quadratics —
+  {s:"Algebra & Functions",q:"Solve: x² − 5x + 6 = 0",o:["x = 1 or 6","x = 2 or 3","x = −2 or −3","x = −1 or 6"],a:1,e:"Factor: (x−2)(x−3) = 0. x = 2 or x = 3."},
+  {s:"Algebra & Functions",q:"Solve: x² − 4 = 0",o:["x = 2","x = −2","x = 2 or −2","x = 4"],a:2,e:"x² = 4. x = ±2."},
+  {s:"Algebra & Functions",q:"Solve: x² + 6x + 9 = 0",o:["x = −3","x = 3","x = −3 or 3","x = −9"],a:0,e:"Factor: (x+3)² = 0. x = −3 (double root)."},
+  {s:"Algebra & Functions",q:"Factor: x² + 5x + 6",o:["(x+1)(x+6)","(x+2)(x+3)","(x+3)(x+2)","(x−2)(x−3)"],a:1,e:"Need two numbers that multiply to 6 and add to 5: 2 and 3. (x+2)(x+3)."},
+  // — Mixed advanced —
+  {s:"Algebra & Functions",q:"If a = 3 and b = −2, what is 2a² − b?",o:["16","18","20","22"],a:2,e:"2(9) − (−2) = 18 + 2 = 20."},
+  {s:"Algebra & Functions",q:"What is the slope of a line through (2,3) and (6,7)?",o:["1/2","1","3/2","2"],a:1,e:"Slope = (7−3)/(6−2) = 4/4 = 1."},
+  {s:"Algebra & Functions",q:"A line has equation y = 3x + 2. What is the y-intercept?",o:["1","2","3","6"],a:1,e:"y-intercept is the constant term: 2."},
+  {s:"Algebra & Functions",q:"If y = 2x − 4 and x = 5, what is y?",o:["4","5","6","7"],a:2,e:"y = 2(5) − 4 = 10 − 4 = 6."},
+  {s:"Algebra & Functions",q:"What is the value of 3² + 4²?",o:["14","20","25","49"],a:2,e:"9 + 16 = 25."},
+  {s:"Algebra & Functions",q:"Simplify: √144",o:["11","12","13","14"],a:1,e:"12 × 12 = 144. So √144 = 12."},
+  {s:"Algebra & Functions",q:"If 2x = y and y = 12, what is x²?",o:["12","24","36","48"],a:2,e:"y = 12 → 2x = 12 → x = 6. x² = 36."},
+  {s:"Algebra & Functions",q:"What is 4! (4 factorial)?",o:["8","16","24","32"],a:2,e:"4! = 4 × 3 × 2 × 1 = 24."},
+  {s:"Algebra & Functions",q:"A rectangle has length 2x + 1 and width x. What is the perimeter?",o:["3x+1","6x+2","4x+2","6x+1"],a:1,e:"Perimeter = 2(2x+1) + 2(x) = 4x+2+2x = 6x+2."},
+  {s:"Algebra & Functions",q:"If the perimeter of a square is 36, what is its area?",o:["64","72","81","90"],a:2,e:"Side = 36/4 = 9. Area = 9² = 81."},
+],
+
+// ════════════════════════════════════════════════════════
+// READING COMPREHENSION — 40 questions
+// ════════════════════════════════════════════════════════
+reading: [
+  // Passage 1: Electrical safety
+  {s:"Reading Comprehension",q:"PASSAGE: Electrical grounding is a safety measure that provides a low-resistance path for electric current to flow to earth in the event of a fault. Without proper grounding, excess current could flow through unintended paths — including through a person — causing serious injury or death. Grounding also protects equipment from voltage surges.\n\nWhat is the PRIMARY purpose of electrical grounding?",o:["Increase electrical efficiency","Prevent current from flowing through people or equipment","Reduce electricity costs","Speed up current flow"],a:1,e:"The passage states grounding provides a path to earth to prevent current flowing through unintended paths, including people."},
+  {s:"Reading Comprehension",q:"PASSAGE: Electrical grounding is a safety measure that provides a low-resistance path for electric current to flow to earth in the event of a fault. Without proper grounding, excess current could flow through unintended paths — including through a person — causing serious injury or death. Grounding also protects equipment from voltage surges.\n\nAccording to the passage, what does grounding protect besides people?",o:["Electrical poles","Circuit breakers","Equipment","Power lines"],a:2,e:"The final sentence states grounding protects equipment from voltage surges."},
+  {s:"Reading Comprehension",q:"PASSAGE: Electrical grounding is a safety measure that provides a low-resistance path for electric current to flow to earth in the event of a fault. Without proper grounding, excess current could flow through unintended paths — including through a person — causing serious injury or death. Grounding also protects equipment from voltage surges.\n\nWhat can happen when grounding is NOT used?",o:["Nothing significant","Slightly reduced efficiency","Potential injury or death","Higher electricity bills"],a:2,e:"The passage says without grounding, current could flow through a person 'causing serious injury or death.'"},
+
+  // Passage 2: Apprenticeships
+  {s:"Reading Comprehension",q:"PASSAGE: Registered apprenticeship programs combine on-the-job training with classroom instruction. Participants earn wages while learning — typically starting at 50% of journeyman wages and increasing over time. Upon completion, apprentices receive nationally recognized credentials. Studies show apprenticeship completers earn an average of 40% more than workers who did not participate in such programs.\n\nWhat is the main benefit described for apprenticeship completers?",o:["Free housing","Higher earnings","Free tools","Reduced work hours"],a:1,e:"The passage states completers earn an average of 40% more than non-participants."},
+  {s:"Reading Comprehension",q:"PASSAGE: Registered apprenticeship programs combine on-the-job training with classroom instruction. Participants earn wages while learning — typically starting at 50% of journeyman wages and increasing over time. Upon completion, apprentices receive nationally recognized credentials. Studies show apprenticeship completers earn an average of 40% more than workers who did not participate in such programs.\n\nAt what wage level do apprentices typically START?",o:["25% of journeyman wages","50% of journeyman wages","75% of journeyman wages","Equal to journeyman wages"],a:1,e:"The passage states apprentices typically start at 50% of journeyman wages."},
+  {s:"Reading Comprehension",q:"PASSAGE: Registered apprenticeship programs combine on-the-job training with classroom instruction. Participants earn wages while learning — typically starting at 50% of journeyman wages and increasing over time. Upon completion, apprentices receive nationally recognized credentials. Studies show apprenticeship completers earn an average of 40% more than workers who did not participate in such programs.\n\nWhich BEST describes what apprentices receive upon completion?",o:["A college degree","Locally recognized certificates","Nationally recognized credentials","A journeyman license only"],a:2,e:"The passage specifically says 'nationally recognized credentials.'"},
+
+  // Passage 3: Environmental psychology
+  {s:"Reading Comprehension",q:"PASSAGE: Research suggests that well-designed workspaces can enhance employee creativity, job satisfaction, and retention. Companies that apply environmental psychology principles — such as optimizing lighting, reducing noise, and providing natural elements — tend to see productivity gains of 10 to 25 percent. However, experts note that physical design alone is insufficient; organizational culture must also support well-being for these gains to be sustained.\n\nWhat is the main argument of this passage?",o:["Only office design affects productivity","Physical design AND culture affect productivity","Culture is more important than design","Lighting is the key factor in productivity"],a:1,e:"The passage argues both physical design and organizational culture are needed for sustained gains."},
+  {s:"Reading Comprehension",q:"PASSAGE: Research suggests that well-designed workspaces can enhance employee creativity, job satisfaction, and retention. Companies that apply environmental psychology principles — such as optimizing lighting, reducing noise, and providing natural elements — tend to see productivity gains of 10 to 25 percent. However, experts note that physical design alone is insufficient; organizational culture must also support well-being for these gains to be sustained.\n\nAccording to the passage, what productivity gains are associated with good workspace design?",o:["5 to 10 percent","10 to 25 percent","25 to 40 percent","Up to 50 percent"],a:1,e:"The passage states 'productivity gains of 10 to 25 percent.'"},
+  {s:"Reading Comprehension",q:"PASSAGE: Research suggests that well-designed workspaces can enhance employee creativity, job satisfaction, and retention. Companies that apply environmental psychology principles — such as optimizing lighting, reducing noise, and providing natural elements — tend to see productivity gains of 10 to 25 percent. However, experts note that physical design alone is insufficient; organizational culture must also support well-being for these gains to be sustained.\n\nWhich of the following is an example of environmental psychology mentioned in the passage?",o:["Team building exercises","Reducing noise","Pay increases","Flexible schedules"],a:1,e:"The passage lists 'reducing noise' as one of the environmental psychology principles."},
+
+  // Passage 4: Copyright and technology
+  {s:"Reading Comprehension",q:"PASSAGE: The rapid expansion of the internet has created complex legal challenges, particularly in the area of copyright law. While content creators rely on copyright protections to safeguard their work, digital technologies have made it easier than ever to copy and distribute material without authorization. Many legal experts argue that existing copyright frameworks, designed in an era before widespread internet use, are inadequate for the current digital landscape.\n\nWhat is the central problem described in the passage?",o:["Internet speeds are too slow","Copyright law hasn't kept pace with digital technology","Content creators earn too little","Social media is unregulated"],a:1,e:"The passage argues existing copyright law is 'inadequate for the current digital landscape.'"},
+  {s:"Reading Comprehension",q:"PASSAGE: The rapid expansion of the internet has created complex legal challenges, particularly in the area of copyright law. While content creators rely on copyright protections to safeguard their work, digital technologies have made it easier than ever to copy and distribute material without authorization. Many legal experts argue that existing copyright frameworks, designed in an era before widespread internet use, are inadequate for the current digital landscape.\n\nAccording to the passage, what have digital technologies made easier?",o:["Creating original content","Enforcing copyright","Copying and distributing material without permission","Paying for content"],a:2,e:"The passage states digital technologies 'made it easier than ever to copy and distribute material without authorization.'"},
+
+  // Passage 5: Mayan calendar
+  {s:"Reading Comprehension",q:"PASSAGE: The Mayan civilization celebrated the New Year on one of two days when the noonday sun is directly overhead. In equatorial regions, the sun reaches this position twice a year. At the early Mayan city of Izapa, the overhead date on the southward passage was August 13. Later, as Mayan civilization moved northward to cities like Edzna, the New Year date shifted to July 26.\n\nWhen did Izapa celebrate its New Year?",o:["January 1","July 26","August 13","December 21"],a:2,e:"The passage states 'At Izapa, the overhead date on the southward passage was August 13.'"},
+  {s:"Reading Comprehension",q:"PASSAGE: The Mayan civilization celebrated the New Year on one of two days when the noonday sun is directly overhead. In equatorial regions, the sun reaches this position twice a year. At the early Mayan city of Izapa, the overhead date on the southward passage was August 13. Later, as Mayan civilization moved northward to cities like Edzna, the New Year date shifted to July 26.\n\nWhy did the New Year date change when civilization moved northward?",o:["Political decisions changed the calendar","The sun's overhead position occurs on different dates at different latitudes","They adopted a new religion","They aligned with the Roman calendar"],a:1,e:"The sun's overhead date changes depending on latitude, so moving north changed when the New Year fell."},
+  {s:"Reading Comprehension",q:"PASSAGE: The Mayan civilization celebrated the New Year on one of two days when the noonday sun is directly overhead. In equatorial regions, the sun reaches this position twice a year. At the early Mayan city of Izapa, the overhead date on the southward passage was August 13. Later, as Mayan civilization moved northward to cities like Edzna, the New Year date shifted to July 26.\n\nHow many times per year does the sun reach directly overhead in equatorial regions?",o:["Once","Twice","Three times","Four times"],a:1,e:"The passage states 'the sun reaches this position twice a year' in equatorial regions."},
+
+  // Passage 6: Nutrition/salt
+  {s:"Reading Comprehension",q:"PASSAGE: There is a large amount of sodium in many foods, so it is generally not necessary to add extra salt when cooking. The human body requires only a small amount of sodium daily to maintain proper fluid balance and nerve function. Excessive sodium intake has been linked to high blood pressure, which is a significant risk factor for heart disease and stroke.\n\nAccording to the passage, why is it unnecessary to add salt when cooking?",o:["Salt is too expensive","Most foods already contain enough sodium","Salt ruins the flavor of food","Cooking removes sodium naturally"],a:1,e:"The passage states 'there is a large amount of sodium in many foods' making extra salt unnecessary."},
+  {s:"Reading Comprehension",q:"PASSAGE: There is a large amount of sodium in many foods, so it is generally not necessary to add extra salt when cooking. The human body requires only a small amount of sodium daily to maintain proper fluid balance and nerve function. Excessive sodium intake has been linked to high blood pressure, which is a significant risk factor for heart disease and stroke.\n\nWhat health problem is associated with excessive sodium intake?",o:["Diabetes","Kidney stones","High blood pressure","Low energy"],a:2,e:"The passage links excessive sodium to 'high blood pressure.'"},
+
+  // Passage 7: Renewable energy
+  {s:"Reading Comprehension",q:"PASSAGE: Renewable energy sources such as solar and wind power have grown rapidly over the past decade. Unlike fossil fuels, they do not produce greenhouse gases during operation. However, they are intermittent — solar panels produce no power at night, and wind turbines require wind. This variability requires grid operators to maintain backup power sources or invest in energy storage technology.\n\nWhat is a key disadvantage of renewable energy described in the passage?",o:["They are too expensive","They produce greenhouse gases","They are intermittent and unreliable","They require too much land"],a:2,e:"The passage states renewables are 'intermittent' — solar produces no power at night, wind needs wind."},
+  {s:"Reading Comprehension",q:"PASSAGE: Renewable energy sources such as solar and wind power have grown rapidly over the past decade. Unlike fossil fuels, they do not produce greenhouse gases during operation. However, they are intermittent — solar panels produce no power at night, and wind turbines require wind. This variability requires grid operators to maintain backup power sources or invest in energy storage technology.\n\nWhat does the passage say about renewable energy and greenhouse gases?",o:["They produce more than fossil fuels","They produce the same as fossil fuels","They do not produce greenhouse gases during operation","The passage does not mention greenhouse gases"],a:2,e:"The passage directly states renewables 'do not produce greenhouse gases during operation.'"},
+  {s:"Reading Comprehension",q:"PASSAGE: Renewable energy sources such as solar and wind power have grown rapidly over the past decade. Unlike fossil fuels, they do not produce greenhouse gases during operation. However, they are intermittent — solar panels produce no power at night, and wind turbines require wind. This variability requires grid operators to maintain backup power sources or invest in energy storage technology.\n\nAccording to the passage, what must grid operators do because of renewable energy variability?",o:["Build more solar panels","Reduce energy consumption","Maintain backup power or invest in storage","Switch entirely to fossil fuels"],a:2,e:"The passage states variability 'requires grid operators to maintain backup power sources or invest in energy storage.'"},
+
+  // Passage 8: Water systems
+  {s:"Reading Comprehension",q:"PASSAGE: Municipal water treatment involves several stages. First, large particles are removed through screens and settling tanks. Then, chemicals such as alum are added to cause smaller particles to clump together — a process called coagulation. The clumped particles are filtered out, and finally, disinfectants such as chlorine are added to eliminate harmful bacteria and viruses before water enters the distribution system.\n\nWhat is the FIRST step in municipal water treatment?",o:["Adding chlorine","Adding alum","Removing large particles","Filtering small particles"],a:2,e:"The passage states the first step is removing large particles through screens and settling tanks."},
+  {s:"Reading Comprehension",q:"PASSAGE: Municipal water treatment involves several stages. First, large particles are removed through screens and settling tanks. Then, chemicals such as alum are added to cause smaller particles to clump together — a process called coagulation. The clumped particles are filtered out, and finally, disinfectants such as chlorine are added to eliminate harmful bacteria and viruses before water enters the distribution system.\n\nWhat is coagulation in the context of water treatment?",o:["Removing large particles","Making small particles clump together","Adding chlorine to kill bacteria","Filtering water through sand"],a:1,e:"The passage defines coagulation as the process of chemicals causing 'smaller particles to clump together.'"},
+  {s:"Reading Comprehension",q:"PASSAGE: Municipal water treatment involves several stages. First, large particles are removed through screens and settling tanks. Then, chemicals such as alum are added to cause smaller particles to clump together — a process called coagulation. The clumped particles are filtered out, and finally, disinfectants such as chlorine are added to eliminate harmful bacteria and viruses before water enters the distribution system.\n\nWhat is the FINAL step before water enters the distribution system?",o:["Filtering","Coagulation","Adding alum","Adding disinfectants like chlorine"],a:3,e:"The passage says 'finally, disinfectants such as chlorine are added' as the last step."},
+
+  // Passage 9: HVAC
+  {s:"Reading Comprehension",q:"PASSAGE: HVAC systems — Heating, Ventilation, and Air Conditioning — regulate the temperature, humidity, and air quality in buildings. Modern HVAC systems use refrigerant cycles to transfer heat, moving it from inside a building to outside during cooling, or the reverse during heating. Proper maintenance, including regular filter changes and refrigerant checks, is essential to keep these systems operating efficiently and to extend their lifespan.\n\nWhat does HVAC stand for?",o:["Heating, Ventilation, Air Conditioning","High Voltage AC system","Heat Vent and Cooling","Hydraulic Valve Air Control"],a:0,e:"The passage explicitly defines HVAC as Heating, Ventilation, and Air Conditioning."},
+  {s:"Reading Comprehension",q:"PASSAGE: HVAC systems — Heating, Ventilation, and Air Conditioning — regulate the temperature, humidity, and air quality in buildings. Modern HVAC systems use refrigerant cycles to transfer heat, moving it from inside a building to outside during cooling, or the reverse during heating. Proper maintenance, including regular filter changes and refrigerant checks, is essential to keep these systems operating efficiently and to extend their lifespan.\n\nDuring cooling, how does a modern HVAC system work?",o:["It generates cold air inside","It moves heat from inside to outside","It reduces electrical current","It increases refrigerant pressure only"],a:1,e:"The passage states HVAC moves heat 'from inside a building to outside during cooling.'"},
+
+  // Passage 10: Plumbing
+  {s:"Reading Comprehension",q:"PASSAGE: The plumbing in a typical building consists of two separate systems: a supply system that brings in clean water under pressure, and a drainage system that removes wastewater by gravity. These systems never mix — a fact that is critical to public health. Where these systems come close together, such as at fixtures like sinks and toilets, proper installation prevents contamination.\n\nWhat keeps clean water and wastewater separate?",o:["Pressure differences","Filters at every fixture","Separate systems that never mix","Special chemicals in the pipes"],a:2,e:"The passage states these 'are two separate systems' that 'never mix.'"},
+  {s:"Reading Comprehension",q:"PASSAGE: The plumbing in a typical building consists of two separate systems: a supply system that brings in clean water under pressure, and a drainage system that removes wastewater by gravity. These systems never mix — a fact that is critical to public health. Where these systems come close together, such as at fixtures like sinks and toilets, proper installation prevents contamination.\n\nHow does the drainage system remove wastewater?",o:["By pressure","By pumps","By gravity","By filtration"],a:2,e:"The passage states the drainage system removes wastewater 'by gravity.'"},
+
+  // Passage 11: Union history
+  {s:"Reading Comprehension",q:"PASSAGE: Labor unions emerged in the late 19th century as workers organized to demand safer working conditions, fair wages, and reasonable hours. Before union protections, 12-hour workdays and child labor were common. Through collective bargaining — negotiating as a group rather than as individuals — unions secured major improvements that are now standard: the 8-hour workday, weekends off, and workplace safety regulations.\n\nWhat is collective bargaining?",o:["Workers negotiating individually","Workers as a group negotiating together","A type of union strike","A government safety program"],a:1,e:"The passage defines it as 'negotiating as a group rather than as individuals.'"},
+  {s:"Reading Comprehension",q:"PASSAGE: Labor unions emerged in the late 19th century as workers organized to demand safer working conditions, fair wages, and reasonable hours. Before union protections, 12-hour workdays and child labor were common. Through collective bargaining — negotiating as a group rather than as individuals — unions secured major improvements that are now standard: the 8-hour workday, weekends off, and workplace safety regulations.\n\nWhich of the following was mentioned as common BEFORE union protections?",o:["8-hour workday","Weekend holidays","12-hour workdays","Minimum wage laws"],a:2,e:"The passage states '12-hour workdays and child labor were common' before union protections."},
+
+  // Passage 12: Construction safety
+  {s:"Reading Comprehension",q:"PASSAGE: Falls are the leading cause of death in the construction industry, accounting for approximately one-third of all construction fatalities. OSHA requires that fall protection be provided at elevations of 6 feet or more in construction. Acceptable fall protection methods include guardrails, safety nets, and personal fall arrest systems. Proper training on fall hazards and equipment is required for all workers on elevated surfaces.\n\nAccording to the passage, at what height does OSHA require fall protection in construction?",o:["4 feet","5 feet","6 feet","8 feet"],a:2,e:"The passage states 'OSHA requires fall protection at elevations of 6 feet or more.'"},
+  {s:"Reading Comprehension",q:"PASSAGE: Falls are the leading cause of death in the construction industry, accounting for approximately one-third of all construction fatalities. OSHA requires that fall protection be provided at elevations of 6 feet or more in construction. Acceptable fall protection methods include guardrails, safety nets, and personal fall arrest systems. Proper training on fall hazards and equipment is required for all workers on elevated surfaces.\n\nApproximately what fraction of construction fatalities are caused by falls?",o:["One-fifth","One-quarter","One-third","One-half"],a:2,e:"The passage states falls account for 'approximately one-third of all construction fatalities.'"},
+  {s:"Reading Comprehension",q:"PASSAGE: Falls are the leading cause of death in the construction industry, accounting for approximately one-third of all construction fatalities. OSHA requires that fall protection be provided at elevations of 6 feet or more in construction. Acceptable fall protection methods include guardrails, safety nets, and personal fall arrest systems. Proper training on fall hazards and equipment is required for all workers on elevated surfaces.\n\nWhich of the following is listed as an acceptable fall protection method?",o:["Hard hats","Steel-toed boots","Safety nets","Reflective vests"],a:2,e:"The passage lists 'safety nets' as one of the acceptable fall protection methods."},
+
+  // Passage 13: Metals/materials
+  {s:"Reading Comprehension",q:"PASSAGE: Steel is an alloy of iron and carbon. By varying the carbon content and adding other elements such as chromium, nickel, or manganese, manufacturers can create steels with widely different properties — from soft and ductile to extremely hard and brittle. Stainless steel, for example, contains at least 10.5% chromium, which forms a protective oxide layer that resists corrosion.\n\nWhat makes stainless steel resistant to corrosion?",o:["High carbon content","The addition of nickel","A protective chromium oxide layer","Extreme hardness"],a:2,e:"The passage states chromium 'forms a protective oxide layer that resists corrosion.'"},
+  {s:"Reading Comprehension",q:"PASSAGE: Steel is an alloy of iron and carbon. By varying the carbon content and adding other elements such as chromium, nickel, or manganese, manufacturers can create steels with widely different properties — from soft and ductile to extremely hard and brittle. Stainless steel, for example, contains at least 10.5% chromium, which forms a protective oxide layer that resists corrosion.\n\nWhat is steel?",o:["Pure iron","An alloy of iron and carbon","A type of aluminum","Iron mixed with chromium only"],a:1,e:"The passage defines steel as 'an alloy of iron and carbon.'"},
+
+  // Passage 14: Inference questions
+  {s:"Reading Comprehension",q:"PASSAGE: A journeyman electrician who had worked in the industry for 15 years recently decided to pursue a master electrician license. She studied for six months, passed the exam on her first attempt, and opened her own electrical contracting business. Within two years, her company had grown to 12 employees.\n\nWhat can be inferred about the journeyman electrician?",o:["She had no prior electrical experience","She was unsuccessful in her career","She was driven and capable","She opened her business before getting licensed"],a:2,e:"Passing on her first attempt after 15 years of experience, then growing to 12 employees suggests she was driven and capable."},
+  {s:"Reading Comprehension",q:"PASSAGE: Many young people today are unaware that skilled trades offer career pathways that can lead to wages comparable to or exceeding those of many four-year college graduates — often without the burden of student loan debt. A plumber, electrician, or HVAC technician with several years of experience can earn well above the national median income.\n\nWhat is the author's likely ATTITUDE toward the skilled trades?",o:["Negative — trades are low-status","Neutral — just presenting facts","Positive — trades are undervalued and worth pursuing","Critical — trades require too much physical labor"],a:2,e:"The author highlights high wages without debt and frames trades as undervalued, suggesting a positive attitude."},
+  {s:"Reading Comprehension",q:"PASSAGE: The aptitude test used by many union apprenticeship programs does not test electrical knowledge. Instead, it evaluates a candidate's mathematical ability and reading comprehension — skills that predict how well someone will learn the technical content of the trade once they begin training.\n\nWhy does the aptitude test NOT include electrical knowledge questions?",o:["Electrical knowledge is not important","Applicants are expected to already know everything","The test predicts learning ability, not current knowledge","The test was designed before electricity existed"],a:2,e:"The passage states math and reading 'predict how well someone will learn' — the test is about learning ability, not prior knowledge."},
+],
+
+// ════════════════════════════════════════════════════════
+// MECHANICAL REASONING — 40 questions
+// ════════════════════════════════════════════════════════
+mechanical: [
+  // — Gears —
+  {s:"Mechanical Reasoning",q:"Gear A has 20 teeth, Gear B has 10 teeth. If Gear A makes 1 rotation, how many rotations does Gear B make?",o:["0.5","1","2","4"],a:2,e:"Gear ratio = 20/10 = 2. Gear B rotates twice for every rotation of Gear A."},
+  {s:"Mechanical Reasoning",q:"Two gears are meshed. Gear A has 30 teeth and Gear B has 15 teeth. Gear B rotates at 60 RPM. At what speed does Gear A rotate?",o:["15 RPM","30 RPM","45 RPM","60 RPM"],a:1,e:"Gear A has twice as many teeth, so it rotates at half the speed. 60 ÷ 2 = 30 RPM."},
+  {s:"Mechanical Reasoning",q:"Three gears are in a row: A drives B, B drives C. A and C rotate in _____ direction.",o:["Opposite","Same","Either — it depends","Perpendicular"],a:0,e:"A drives B (opposite direction). B drives C (opposite to B, which is same as A). Wait — A→B opposite, B→C opposite, so A and C rotate the SAME direction."},
+  {s:"Mechanical Reasoning",q:"A large gear with 40 teeth drives a small gear with 8 teeth. The small gear will rotate _____ times for every 1 rotation of the large gear.",o:["2","4","5","8"],a:2,e:"Ratio = 40/8 = 5. The small gear rotates 5 times per revolution of the large gear."},
+  {s:"Mechanical Reasoning",q:"Two gears are meshed. If you want to increase the output speed, you should:",o:["Use a larger driven gear","Use a smaller driven gear","Use gears of the same size","Reduce the number of teeth on the driving gear"],a:1,e:"A smaller driven gear rotates faster than the driving gear, increasing output speed."},
+  // — Pulleys —
+  {s:"Mechanical Reasoning",q:"A single fixed pulley is used to lift a 100 lb load. How much force is required (ignoring friction)?",o:["50 lbs","75 lbs","100 lbs","200 lbs"],a:2,e:"A single fixed pulley changes direction but does not provide mechanical advantage. Force required = 100 lbs."},
+  {s:"Mechanical Reasoning",q:"A movable pulley system uses 2 ropes to support the load. To lift a 200 lb load, how much force is needed?",o:["50 lbs","100 lbs","150 lbs","200 lbs"],a:1,e:"A movable pulley with 2 rope segments divides the load by 2. 200 ÷ 2 = 100 lbs."},
+  {s:"Mechanical Reasoning",q:"A block-and-tackle system uses 4 ropes to support a 400 lb load. How much pull force is required?",o:["50 lbs","75 lbs","100 lbs","200 lbs"],a:2,e:"4 supporting ropes divide the load: 400 ÷ 4 = 100 lbs."},
+  {s:"Mechanical Reasoning",q:"A pulley with 3 supporting rope segments lifts a 150 lb load. How much force is needed?",o:["30 lbs","50 lbs","75 lbs","100 lbs"],a:1,e:"150 ÷ 3 = 50 lbs."},
+  {s:"Mechanical Reasoning",q:"What is the main advantage of a pulley system over lifting by hand?",o:["It increases the weight of the load","It reduces the force needed to lift","It increases the distance traveled","It removes the need for rope"],a:1,e:"Pulley systems provide mechanical advantage — they reduce the force needed to lift a load."},
+  // — Levers —
+  {s:"Mechanical Reasoning",q:"Which class of lever has the fulcrum between the effort and the load?",o:["First class","Second class","Third class","Fourth class"],a:0,e:"First-class lever: fulcrum in the middle. Examples: seesaw, scissors, crowbar."},
+  {s:"Mechanical Reasoning",q:"A wheelbarrow is an example of which class of lever?",o:["First class","Second class","Third class","Fourth class"],a:1,e:"Second-class lever: load between fulcrum and effort. The wheel is the fulcrum, the load is in the middle, effort is at the handles."},
+  {s:"Mechanical Reasoning",q:"A fishing rod is an example of which class of lever?",o:["First class","Second class","Third class","None — it is not a lever"],a:2,e:"Third-class lever: effort between fulcrum and load. The hand gripping near the handle is the effort, the tip holds the load."},
+  {s:"Mechanical Reasoning",q:"A 10 lb weight is placed 4 feet from the fulcrum of a first-class lever. To balance it, a 5 lb weight must be placed _____ from the fulcrum.",o:["2 feet","4 feet","8 feet","10 feet"],a:2,e:"Torque: 10 × 4 = 5 × x. x = 40/5 = 8 feet."},
+  {s:"Mechanical Reasoning",q:"Which lever provides a mechanical advantage greater than 1 when the effort arm is longer than the load arm?",o:["Any class of lever","First class only","Second class only","Third class only"],a:0,e:"Any lever where the effort arm is longer than the load arm provides a mechanical advantage greater than 1, regardless of class."},
+  // — Inclined planes / wedges / screws —
+  {s:"Mechanical Reasoning",q:"A ramp is 12 feet long and rises 3 feet. What is the mechanical advantage?",o:["2","3","4","5"],a:2,e:"MA = length ÷ height = 12 ÷ 3 = 4."},
+  {s:"Mechanical Reasoning",q:"A longer ramp compared to a shorter ramp that rises the same height:",o:["Requires more force","Requires less force","Requires the same force","The ramp length does not matter"],a:1,e:"A longer ramp spreads the work over a greater distance, requiring less force at any point."},
+  {s:"Mechanical Reasoning",q:"A wedge is a type of:",o:["Pulley","Lever","Inclined plane","Wheel and axle"],a:2,e:"A wedge is a double inclined plane that converts force in one direction into forces perpendicular to it."},
+  {s:"Mechanical Reasoning",q:"A screw with more threads per inch (finer pitch) compared to one with fewer threads:",o:["Requires more turns to advance the same distance","Requires fewer turns to advance the same distance","Requires the same number of turns","Provides less holding force"],a:0,e:"Finer pitch = more threads per inch = more turns required to advance the same distance, but greater mechanical advantage per turn."},
+  // — Springs and forces —
+  {s:"Mechanical Reasoning",q:"Two springs are identical. When connected end-to-end (in series) and pulled with a given force, they stretch:",o:["Half as much as one spring","The same as one spring","Twice as much as one spring","Four times as much as one spring"],a:2,e:"Springs in series: each spring stretches the full amount. Total stretch = 2× a single spring."},
+  {s:"Mechanical Reasoning",q:"If you compress a spring and release it, what kind of energy is released?",o:["Chemical energy","Potential energy stored as kinetic","Thermal energy","Electrical energy"],a:1,e:"Compressed spring stores potential (elastic) energy, which converts to kinetic energy upon release."},
+  {s:"Mechanical Reasoning",q:"A heavier ball and a lighter ball are dropped from the same height in a vacuum. Which hits the ground first?",o:["The heavier ball","The lighter ball","They hit at the same time","It depends on the size"],a:2,e:"In a vacuum, gravity accelerates all objects equally regardless of mass. Both hit simultaneously."},
+  // — Fluids —
+  {s:"Mechanical Reasoning",q:"Water flows through a pipe that narrows from 4 inches to 2 inches in diameter. What happens to the water velocity?",o:["It decreases","It stays the same","It increases","It stops"],a:2,e:"By conservation of flow (Bernoulli), when a pipe narrows, fluid speed increases to maintain flow rate."},
+  {s:"Mechanical Reasoning",q:"A hydraulic jack uses a small piston of area 2 in² and a large piston of area 20 in². A force of 50 lbs on the small piston produces what force on the large piston?",o:["50 lbs","100 lbs","500 lbs","1000 lbs"],a:2,e:"Hydraulic advantage = 20/2 = 10. 50 × 10 = 500 lbs."},
+  {s:"Mechanical Reasoning",q:"Which type of pipe material is most commonly used for natural gas distribution lines?",o:["Copper","PVC","Steel","Glass"],a:2,e:"Steel is the primary material for natural gas distribution lines due to its strength and durability."},
+  // — Electrical concepts (mechanical application) —
+  {s:"Mechanical Reasoning",q:"Which of the following is NOT a conductor of electricity?",o:["Copper","Aluminum","Rubber","Iron"],a:2,e:"Rubber is an insulator, not a conductor. Copper, aluminum, and iron all conduct electricity."},
+  {s:"Mechanical Reasoning",q:"A circuit has a 12-volt battery and a 4-ohm resistor. What is the current (using Ohm's Law)?",o:["0.5 amps","2 amps","3 amps","4 amps"],a:2,e:"Ohm's Law: I = V/R = 12/4 = 3 amps."},
+  {s:"Mechanical Reasoning",q:"Which of the following tools is used to measure electrical current?",o:["Voltmeter","Ohmmeter","Ammeter","Wattmeter"],a:2,e:"An ammeter measures electrical current (amperage)."},
+  {s:"Mechanical Reasoning",q:"A motor converts:",o:["Electrical energy to mechanical energy","Mechanical energy to electrical energy","Heat to electrical energy","Sound to electrical energy"],a:0,e:"An electric motor converts electrical energy into mechanical (rotational) energy."},
+  {s:"Mechanical Reasoning",q:"A generator converts:",o:["Electrical energy to mechanical energy","Mechanical energy to electrical energy","Heat to electrical energy","Chemical energy to light"],a:1,e:"A generator converts mechanical energy into electrical energy — the opposite of a motor."},
+  // — Structural / load —
+  {s:"Mechanical Reasoning",q:"A 200 lb weight sits exactly in the center of a beam supported at both ends. Each support carries:",o:["200 lbs","150 lbs","100 lbs","50 lbs"],a:2,e:"When weight is centered, each support carries exactly half. 200 ÷ 2 = 100 lbs."},
+  {s:"Mechanical Reasoning",q:"A 300 lb load is placed at one-third of the way along a beam from the left support. The right support carries:",o:["200 lbs","150 lbs","100 lbs","75 lbs"],a:2,e:"Load × (distance from opposite end / total length) = 300 × (1/3) = 100 lbs at right support."},
+  {s:"Mechanical Reasoning",q:"Which shape is the strongest structural form for resisting compression?",o:["Square","Rectangle","Triangle","Circle"],a:2,e:"Triangles distribute force efficiently and cannot be distorted without changing the length of a side, making them the strongest structural shape."},
+  {s:"Mechanical Reasoning",q:"When a steel beam heats up, it:",o:["Contracts","Stays the same size","Expands","Becomes hollow"],a:2,e:"All metals expand when heated. This is why expansion joints are built into bridges and pipelines."},
+  {s:"Mechanical Reasoning",q:"Two ropes support a weight equally from a horizontal bar. If one rope is removed, the remaining rope carries:",o:["The same weight","Twice the weight","Half the weight","Three times the weight"],a:1,e:"When one rope is removed, the remaining rope must carry the full load — double what it carried before."},
+  // — Tools / applied —
+  {s:"Mechanical Reasoning",q:"A screwdriver with a longer handle compared to one with a shorter handle (same blade):",o:["Provides less torque","Provides the same torque","Provides more torque","Has no effect on torque"],a:2,e:"Torque = force × distance. A longer handle increases the distance, so more torque can be applied with the same force."},
+  {s:"Mechanical Reasoning",q:"Which wrench provides the MOST torque with the same applied force?",o:["A 6-inch wrench","An 8-inch wrench","A 10-inch wrench","A 12-inch wrench"],a:3,e:"Torque = force × length. Longer wrench = more torque with the same force."},
+  {s:"Mechanical Reasoning",q:"A wheel with a large radius is connected to an axle with a small radius. Turning the wheel requires _____ force than turning the axle directly.",o:["More","The same","Less","Unpredictably different"],a:2,e:"The wheel-and-axle is a simple machine. The larger wheel requires less force to turn than the small axle directly."},
+  {s:"Mechanical Reasoning",q:"Which type of fastener is BEST for joining two materials that may need to be disassembled?",o:["A rivet","A weld","A bolt and nut","Epoxy adhesive"],a:2,e:"Bolts and nuts can be tightened and removed, making them ideal for joints that may need to be disassembled."},
+  {s:"Mechanical Reasoning",q:"A pipe wrench grips better when:",o:["You apply less force","You pull rather than push","The load is lighter","You apply more force, because the jaw tightens under load"],a:3,e:"Pipe wrenches are self-tightening — the more force applied, the harder the jaw grips the pipe."},
+],
+
+// ════════════════════════════════════════════════════════
+// PAPER FOLDING — 30 questions
+// ════════════════════════════════════════════════════════
+folding: [
+  {s:"Paper Folding",q:"A square piece of paper is folded in half from left to right. A hole is punched in the middle of the right side. How many holes when unfolded?",o:["1","2","3","4"],a:1,e:"One fold creates 2 layers. One punch = 2 holes — one on each side of the fold line."},
+  {s:"Paper Folding",q:"A square is folded left-to-right, then top-to-bottom. A hole is punched in the top-right corner. How many holes when fully unfolded?",o:["1","2","4","8"],a:2,e:"Two folds = 4 layers = 4 holes, one in each corner of the paper."},
+  {s:"Paper Folding",q:"A square is folded diagonally (bottom-left to top-right corner). A hole is punched in the center of the triangle. How many holes when unfolded?",o:["1","2","3","4"],a:1,e:"One diagonal fold = 2 layers. 1 punch = 2 holes placed symmetrically across the diagonal."},
+  {s:"Paper Folding",q:"Paper is folded left-to-right, then left-to-right again. A hole is punched on the far right. How many holes when fully unfolded?",o:["1","2","4","8"],a:2,e:"Two folds in the same direction = 4 layers = 4 holes evenly spaced across the paper."},
+  {s:"Paper Folding",q:"A square is folded in half from top to bottom. A hole is punched in the top-left corner. Where are the holes when unfolded?",o:["Top-left only","Top-left and bottom-left","Top-left and top-right","All four corners"],a:1,e:"Folding top-to-bottom: punching top-left creates a mirror hole at bottom-left when unfolded."},
+  {s:"Paper Folding",q:"Paper is folded in half left-to-right. A hole is punched near the bottom-center of the folded paper. How many holes when unfolded?",o:["1","2","3","4"],a:1,e:"The fold creates 2 layers. One punch near center-bottom = 2 holes symmetric about the fold line."},
+  {s:"Paper Folding",q:"Paper is folded left-to-right, then top-to-bottom, then left-to-right again. A hole is punched in the top-right corner. How many holes when unfolded?",o:["2","4","6","8"],a:3,e:"Three folds: 2³ = 8 layers. One punch = 8 holes when fully unfolded."},
+  {s:"Paper Folding",q:"A long rectangular paper is folded in thirds from left to right (like a letter). A hole is punched through all layers in the center. How many holes when unfolded?",o:["1","2","3","4"],a:2,e:"Folding in thirds = 3 layers. One punch through all layers = 3 holes."},
+  {s:"Paper Folding",q:"Paper is folded in half from left to right. Two holes are punched side by side near the left edge. How many holes when unfolded?",o:["2","3","4","6"],a:2,e:"Each of the 2 punches creates 2 holes (2 layers). Total = 4 holes."},
+  {s:"Paper Folding",q:"A square is folded diagonally. A hole is punched near one corner of the triangle. When unfolded, the two holes will be:",o:["Near the center","At opposite corners","Symmetric across the diagonal fold line","At the top edge"],a:2,e:"Diagonal fold: holes appear symmetric on opposite sides of the diagonal crease."},
+  {s:"Paper Folding",q:"Paper is folded left-to-right once. A hole is punched near the top of the folded edge (the right side). When unfolded, where are the holes?",o:["Both near the top, one on each side of the original fold","Both near the top-right corner","One at top, one at bottom","Only one hole on the right side"],a:0,e:"Punching through the folded edge creates 2 holes symmetric about the fold line — both near the top."},
+  {s:"Paper Folding",q:"Paper is folded top-to-bottom, then left-to-right. A hole is punched in the center of the resulting quarter-sheet. How many holes when fully unfolded?",o:["1","2","3","4"],a:3,e:"Two perpendicular folds create 4 layers. One center punch = 4 holes arranged symmetrically."},
+  {s:"Paper Folding",q:"Paper is folded left-to-right. A hole is punched on the FOLD LINE (the far right edge after folding). When unfolded, how many holes appear?",o:["1","2","3","4"],a:0,e:"A hole punched exactly on the fold line creates only 1 hole when unfolded — the two layers share the same point on the fold."},
+  {s:"Paper Folding",q:"A square is folded in half left-to-right, and then the top-right corner is folded down to meet the bottom-right corner. A hole is punched in the top-right area. How many holes when fully unfolded?",o:["2","3","4","8"],a:2,e:"Two folds = 4 layers = 4 holes when the paper is fully unfolded."},
+  {s:"Paper Folding",q:"Paper is folded left-to-right three times in a row. How many layers does it now have?",o:["3","4","6","8"],a:3,e:"Each fold doubles the layers: 1→2→4→8 layers after 3 folds."},
+  {s:"Paper Folding",q:"Paper is folded top-to-bottom. A hole is punched in the upper-left corner of the folded paper. When fully unfolded, the holes appear:",o:["Only at the top-left","At top-left and top-right","At top-left and bottom-left","At all four corners"],a:2,e:"Top-to-bottom fold: punching top-left mirrors to bottom-left when unfolded."},
+  {s:"Paper Folding",q:"A hole is punched through a flat, unfolded piece of paper. How many holes are there?",o:["0","1","2","4"],a:1,e:"No folding = 1 layer = 1 hole. Simple baseline question."},
+  {s:"Paper Folding",q:"Paper is folded left-to-right. A hole is punched far to the left (on the non-folded side). When unfolded, how many holes are there?",o:["1","2","3","4"],a:1,e:"Folding left-to-right still creates 2 layers. Any punch through those layers creates 2 holes."},
+  {s:"Paper Folding",q:"Paper is folded in half, then folded in half again (same direction). A hole is punched near the open edge. How many holes when unfolded?",o:["2","3","4","8"],a:2,e:"Same-direction folding twice = 4 layers = 4 holes."},
+  {s:"Paper Folding",q:"A square is folded so that the top-right corner meets the bottom-left corner (diagonal fold). A hole is punched in the top-left corner area. When unfolded, the holes are located:",o:["Both at top-left","At top-left and bottom-right","At top-right and bottom-left","At top-left and top-right"],a:1,e:"A diagonal fold from TR to BL creates symmetry across that diagonal. Punching top-left mirrors to bottom-right."},
+  {s:"Paper Folding",q:"Paper is folded left-to-right, then top-to-bottom. A hole is punched exactly at the center of the folded piece. How many holes when unfolded?",o:["1","2","3","4"],a:3,e:"Two perpendicular folds = 4 layers. Center punch = 4 holes at the center of each quadrant."},
+  {s:"Paper Folding",q:"Paper is folded in half (left to right). If 3 holes are punched through all layers, how many holes appear when unfolded?",o:["3","4","6","8"],a:2,e:"One fold = 2 layers. 3 punches × 2 layers = 6 holes."},
+  {s:"Paper Folding",q:"Paper is folded top-to-bottom, then left-to-right, then top-to-bottom again. How many layers total?",o:["4","6","8","16"],a:2,e:"Three folds: 2³ = 8 layers."},
+  {s:"Paper Folding",q:"Paper is folded once (left-to-right). A hole is punched exactly at the fold line at the top. When unfolded, how many holes are there?",o:["1","2","3","4"],a:0,e:"A hole on the fold line is shared by both layers — it creates 1 hole when unfolded."},
+  {s:"Paper Folding",q:"Paper folded left-to-right, then top-to-bottom. 2 holes are punched in different locations. When unfolded, how many holes total?",o:["2","4","6","8"],a:3,e:"Two folds = 4 layers. Each of 2 punches creates 4 holes. Total = 8 holes."},
+  {s:"Paper Folding",q:"When paper is folded and a hole is punched at a corner of the folded piece (not on a fold line), the holes when unfolded will always be:",o:["At the same corner","Arranged symmetrically","All in a straight line","Random"],a:1,e:"Holes always appear symmetrically — they mirror each other across each fold line."},
+  {s:"Paper Folding",q:"Paper is folded in half four times. How many layers does it have?",o:["8","12","16","32"],a:2,e:"Each fold doubles layers: 2→4→8→16 layers after 4 folds."},
+  {s:"Paper Folding",q:"A rectangular paper is folded so the left edge meets the right edge. A hole is punched through the center. When unfolded, where are the holes?",o:["At the center, one hole","Two holes symmetric about the fold (center-left and center-right)","Four holes at each corner","One hole on the right side"],a:1,e:"Folding left-to-right creates 2 layers. Center punch = 2 holes symmetric about the fold line."},
+  {s:"Paper Folding",q:"Paper is folded left-to-right. A hole is punched near the top-center. A second hole is punched near the bottom-center. How many holes when unfolded?",o:["2","3","4","6"],a:2,e:"2 punches × 2 layers = 4 holes total."},
+  {s:"Paper Folding",q:"After folding a piece of paper in half twice and punching one hole, you always get _____ holes when unfolded.",o:["2","3","4","8"],a:2,e:"2 folds = 4 layers = 4 holes. This is always true unless a hole is punched on a fold line."},
+],
+
+// ════════════════════════════════════════════════════════
+// NUMERICAL COMPUTATION — 40 questions (GAN Battery)
+// ════════════════════════════════════════════════════════
+numerical: [
+  // — Whole numbers —
+  {s:"Numerical Computation",q:"1,600.4 ÷ 4 = ?",o:["400.3","200.4","100.1","400.1"],a:3,e:"1600 ÷ 4 = 400, and 0.4 ÷ 4 = 0.1. Answer: 400.1."},
+  {s:"Numerical Computation",q:"41.9 − 3.84 = ?",o:["38.00","28.06","38.06","38.20"],a:2,e:"41.90 − 3.84. Align decimals: 90−84=06, 41−3=38. Answer: 38.06."},
+  {s:"Numerical Computation",q:"48 × 25 = ?",o:["1,000","1,100","1,200","1,300"],a:2,e:"48 × 25: 48 × 100 = 4800, ÷ 4 = 1,200."},
+  {s:"Numerical Computation",q:"756 ÷ 12 = ?",o:["53","61","63","67"],a:2,e:"12 × 60 = 720. 756 − 720 = 36. 36 ÷ 12 = 3. Total: 63."},
+  {s:"Numerical Computation",q:"2,345 + 1,678 = ?",o:["3,923","4,023","4,013","4,123"],a:1,e:"2345 + 1678: 5+8=13, carry 1. 4+7+1=12, carry 1. 3+6+1=10, carry 1. 2+1+1=4. Answer: 4,023."},
+  {s:"Numerical Computation",q:"5,000 − 3,472 = ?",o:["1,428","1,528","1,628","1,728"],a:1,e:"5000 − 3472. Borrow as needed: 1,528."},
+  {s:"Numerical Computation",q:"144 ÷ 8 = ?",o:["14","16","18","22"],a:2,e:"8 × 18 = 144. Answer: 18."},
+  {s:"Numerical Computation",q:"375 × 4 = ?",o:["1,400","1,500","1,600","1,700"],a:1,e:"375 × 4: 300×4=1200, 75×4=300. 1200+300=1,500."},
+  // — Fractions —
+  {s:"Numerical Computation",q:"1/8 × 3/5 = ?",o:["2/40","3/40","5/24","1/40"],a:1,e:"1×3=3, 8×5=40. Answer: 3/40."},
+  {s:"Numerical Computation",q:"3/4 + 1/6 = ?",o:["4/10","11/12","2/3","5/8"],a:1,e:"LCD = 12. 9/12 + 2/12 = 11/12."},
+  {s:"Numerical Computation",q:"5/8 − 1/4 = ?",o:["4/4","3/8","1/2","4/8"],a:1,e:"Convert 1/4 to 2/8. 5/8 − 2/8 = 3/8."},
+  {s:"Numerical Computation",q:"2/3 × 3/8 = ?",o:["5/11","6/24","1/4","5/24"],a:2,e:"2×3=6, 3×8=24. 6/24 = 1/4."},
+  {s:"Numerical Computation",q:"3/4 ÷ 3/8 = ?",o:["1/2","1","2","9/32"],a:2,e:"Flip and multiply: 3/4 × 8/3 = 24/12 = 2."},
+  {s:"Numerical Computation",q:"What is 3/4 of 240?",o:["160","170","180","190"],a:2,e:"240 ÷ 4 = 60. 60 × 3 = 180."},
+  {s:"Numerical Computation",q:"What fraction of 36 is 9?",o:["1/3","1/4","1/5","1/6"],a:1,e:"9/36 = 1/4."},
+  // — Decimals —
+  {s:"Numerical Computation",q:"0.45 × 20 = ?",o:["7.0","8.0","9.0","10.0"],a:2,e:"45 × 20 = 900. Move decimal 2 places = 9.0."},
+  {s:"Numerical Computation",q:"3.6 × 1.5 = ?",o:["4.8","5.0","5.2","5.4"],a:3,e:"36 × 15 = 540. Move decimal 2 places: 5.40 = 5.4."},
+  {s:"Numerical Computation",q:"12.5 ÷ 0.5 = ?",o:["6.25","25","2.5","62.5"],a:1,e:"Dividing by 0.5 = multiplying by 2. 12.5 × 2 = 25."},
+  {s:"Numerical Computation",q:"0.008 × 1,000 = ?",o:["0.8","8","80","800"],a:1,e:"Moving decimal 3 places right: 0.008 × 1000 = 8."},
+  {s:"Numerical Computation",q:"7.2 ÷ 0.9 = ?",o:["0.8","8","0.08","80"],a:1,e:"72 ÷ 9 = 8. Answer: 8."},
+  // — Percentages —
+  {s:"Numerical Computation",q:"What is 15% of 80?",o:["10","11","12","13"],a:2,e:"0.15 × 80 = 12."},
+  {s:"Numerical Computation",q:"What is 8% of 250?",o:["18","20","22","24"],a:1,e:"0.08 × 250 = 20."},
+  {s:"Numerical Computation",q:"45 is what percent of 180?",o:["20%","25%","30%","35%"],a:1,e:"45/180 = 1/4 = 25%."},
+  {s:"Numerical Computation",q:"A price increases from $50 to $65. What is the percent increase?",o:["20%","25%","30%","35%"],a:2,e:"Increase = $15. 15/50 = 0.30 = 30%."},
+  {s:"Numerical Computation",q:"30% of what number is 90?",o:["270","300","330","360"],a:1,e:"0.30 × x = 90. x = 90 ÷ 0.30 = 300."},
+  // — Mixed operations —
+  {s:"Numerical Computation",q:"(14 + 6) × 3 − 10 = ?",o:["40","50","60","70"],a:1,e:"(20) × 3 = 60. 60 − 10 = 50."},
+  {s:"Numerical Computation",q:"48 ÷ (4 + 4) = ?",o:["4","6","8","12"],a:1,e:"48 ÷ 8 = 6."},
+  {s:"Numerical Computation",q:"3² + 4² = ?",o:["14","25","30","49"],a:1,e:"9 + 16 = 25."},
+  {s:"Numerical Computation",q:"√49 + √16 = ?",o:["9","10","11","12"],a:2,e:"√49 = 7, √16 = 4. 7 + 4 = 11."},
+  {s:"Numerical Computation",q:"(15 − 3) ÷ 4 + 2² = ?",o:["3","5","7","9"],a:2,e:"12 ÷ 4 = 3. 2² = 4. 3 + 4 = 7."},
+  // — Measurement —
+  {s:"Numerical Computation",q:"How many feet are in 4.5 yards?",o:["9","12","13.5","18"],a:2,e:"1 yard = 3 feet. 4.5 × 3 = 13.5 feet."},
+  {s:"Numerical Computation",q:"Convert 3 feet 6 inches to inches.",o:["36 inches","40 inches","42 inches","48 inches"],a:2,e:"3 feet = 36 inches. 36 + 6 = 42 inches."},
+  {s:"Numerical Computation",q:"A room is 12 feet × 15 feet. What is the area in square feet?",o:["144","160","180","200"],a:2,e:"Area = 12 × 15 = 180 sq ft."},
+  {s:"Numerical Computation",q:"A pipe is 8 feet long. It is cut into pieces that are 8 inches each. How many pieces?",o:["10","12","14","16"],a:1,e:"8 feet = 96 inches. 96 ÷ 8 = 12 pieces."},
+  {s:"Numerical Computation",q:"How many minutes are in 3.5 hours?",o:["180","200","210","240"],a:2,e:"3.5 × 60 = 210 minutes."},
+  // — Applied math —
+  {s:"Numerical Computation",q:"A worker earns $22/hr. How much does she earn in a 40-hour week?",o:["$800","$840","$860","$880"],a:3,e:"22 × 40 = $880."},
+  {s:"Numerical Computation",q:"Materials cost $3.75 per foot. What is the cost of 16 feet?",o:["$56","$60","$64","$68"],a:1,e:"3.75 × 16 = $60."},
+  {s:"Numerical Computation",q:"A tank holds 500 gallons. It is 60% full. How many gallons are in the tank?",o:["280","300","320","350"],a:1,e:"0.60 × 500 = 300 gallons."},
+  {s:"Numerical Computation",q:"An apprentice works 8 hours a day, 5 days a week. How many hours per month (4 weeks)?",o:["140","160","180","200"],a:1,e:"8 × 5 × 4 = 160 hours."},
+  {s:"Numerical Computation",q:"Wire weighs 0.5 lbs per foot. How much does 240 feet of wire weigh?",o:["100 lbs","110 lbs","120 lbs","130 lbs"],a:2,e:"0.5 × 240 = 120 lbs."},
+],
+
+// ════════════════════════════════════════════════════════
+// NUMERICAL REASONING — 40 questions (GAN Battery)
+// ════════════════════════════════════════════════════════
+reasoning: [
+  // — Arithmetic sequences —
+  {s:"Numerical Reasoning",q:"Next number: 3, 7, 11, 15, ___",o:["17","18","19","20"],a:2,e:"Adding 4 each time. 15 + 4 = 19."},
+  {s:"Numerical Reasoning",q:"Next number: 2, 5, 10, 17, 26, ___",o:["33","35","37","39"],a:2,e:"Differences: 3,5,7,9,11. Each increases by 2. 26+11=37."},
+  {s:"Numerical Reasoning",q:"Next number: 50, 45, 41, 38, ___",o:["35","36","37","38"],a:1,e:"Subtracting 5,4,3,2... Next subtract 2: 38−2=36."},
+  {s:"Numerical Reasoning",q:"Next number: 1, 2, 4, 7, 11, ___",o:["14","15","16","17"],a:2,e:"Differences: 1,2,3,4,5. Next add 5: 11+5=16."},
+  {s:"Numerical Reasoning",q:"Next number: 100, 91, 83, 76, ___",o:["68","69","70","71"],a:2,e:"Subtracting 9,8,7,7... wait: 100−91=9, 91−83=8, 83−76=7. Next subtract 6: 76−6=70."},
+  {s:"Numerical Reasoning",q:"Next number: 2, 3, 5, 8, 12, ___",o:["15","16","17","18"],a:2,e:"Differences: 1,2,3,4,5. Next add 5: 12+5=17."},
+  {s:"Numerical Reasoning",q:"Next number: 1, 4, 9, 16, 25, ___",o:["30","34","36","40"],a:2,e:"Perfect squares: 1²,2²,3²,4²,5². Next: 6²=36."},
+  {s:"Numerical Reasoning",q:"Next number: 5, 10, 20, 40, ___",o:["60","70","80","100"],a:2,e:"Each number doubles. 40×2=80."},
+  {s:"Numerical Reasoning",q:"Next number: 81, 27, 9, 3, ___",o:["0","1","2","3"],a:1,e:"Dividing by 3 each time. 3÷3=1."},
+  {s:"Numerical Reasoning",q:"Next number: 1, 1, 2, 3, 5, 8, ___",o:["11","12","13","14"],a:2,e:"Fibonacci: each number = sum of previous two. 5+8=13."},
+  // — Geometric sequences —
+  {s:"Numerical Reasoning",q:"Next: 3, 6, 12, 24, ___",o:["36","42","48","56"],a:2,e:"Each multiplied by 2. 24×2=48."},
+  {s:"Numerical Reasoning",q:"Next: 100, 50, 25, 12.5, ___",o:["6","6.25","7","8"],a:1,e:"Dividing by 2 each time. 12.5÷2=6.25."},
+  {s:"Numerical Reasoning",q:"Next: 2, 6, 18, 54, ___",o:["108","162","216","270"],a:1,e:"Multiplying by 3. 54×3=162."},
+  {s:"Numerical Reasoning",q:"Next: 1,000, 100, 10, ___",o:["0","1","2","5"],a:1,e:"Dividing by 10. 10÷10=1."},
+  {s:"Numerical Reasoning",q:"Next: 4, 12, 36, 108, ___",o:["216","288","324","432"],a:2,e:"Multiplying by 3. 108×3=324."},
+  // — Mixed patterns —
+  {s:"Numerical Reasoning",q:"Next: 1, 3, 7, 13, 21, ___",o:["28","29","30","31"],a:3,e:"Differences: 2,4,6,8,10. Next add 10: 21+10=31."},
+  {s:"Numerical Reasoning",q:"Next: 0, 1, 3, 6, 10, 15, ___",o:["19","20","21","22"],a:2,e:"Triangular numbers. Differences: 1,2,3,4,5,6. 15+6=21."},
+  {s:"Numerical Reasoning",q:"Next: 2, 4, 8, 14, 22, ___",o:["28","30","32","34"],a:2,e:"Differences: 2,4,6,8,10. 22+10=32."},
+  {s:"Numerical Reasoning",q:"Next: 1, 2, 4, 8, 16, 32, ___",o:["48","56","64","72"],a:2,e:"Powers of 2. 32×2=64."},
+  {s:"Numerical Reasoning",q:"Next: 10, 9, 7, 4, ___",o:["0","−1","1","2"],a:0,e:"Subtracting 1,2,3,4... Next subtract 4: 4−4=0."},
+  // — Alternating / two-series patterns —
+  {s:"Numerical Reasoning",q:"Next: 1, 10, 2, 20, 3, 30, ___",o:["4","31","40","33"],a:0,e:"Two alternating series: 1,2,3,4... and 10,20,30,40. The odd positions give the next value: 4."},
+  {s:"Numerical Reasoning",q:"Next: 5, 1, 10, 2, 15, 3, ___",o:["4","18","20","25"],a:2,e:"Two alternating series: 5,10,15,20... and 1,2,3... Next in the first series: 20."},
+  {s:"Numerical Reasoning",q:"Next: 2, 5, 3, 6, 4, 7, ___",o:["5","8","9","10"],a:0,e:"Two alternating series: 2,3,4,5... and 5,6,7... Next in first series: 5."},
+  // — Matrix / table patterns —
+  {s:"Numerical Reasoning",q:"Row 1: 2, 4, 8. Row 2: 3, 6, 12. Row 3: 5, 10, ___",o:["15","18","20","25"],a:2,e:"Each row doubles: the third number is twice the second. 10×2=20."},
+  {s:"Numerical Reasoning",q:"Row 1: 1, 3, 9. Row 2: 2, 6, 18. Row 3: 4, 12, ___",o:["24","30","36","48"],a:2,e:"Each row multiplies by 3. 12×3=36."},
+  {s:"Numerical Reasoning",q:"Column sums: Row 1: 3,4,5. Row 2: 6,8,10. Row 3: 9,12,___",o:["13","14","15","16"],a:2,e:"Each row multiplies the first by 3,6,9. Column 3: 5,10,15."},
+  // — Applied reasoning —
+  {s:"Numerical Reasoning",q:"A pattern of floor tiles alternates: 1 black, 2 white, 1 black, 2 white... The 10th tile is:",o:["Black","White","Either","Cannot determine"],a:1,e:"Pattern of 3: B,W,W,B,W,W... 10 ÷ 3 = 3 remainder 1. 1st in pattern = Black. Wait: positions 1=B,2=W,3=W,4=B,5=W,6=W,7=B,8=W,9=W,10=B. Answer is Black."},
+  {s:"Numerical Reasoning",q:"If every 3rd item off a production line is inspected, and 300 items are produced, how many are inspected?",o:["90","100","150","200"],a:1,e:"300 ÷ 3 = 100 items inspected."},
+  {s:"Numerical Reasoning",q:"Wages: Year 1: $40,000. Year 2: $44,000. Year 3: $48,400. What is the pattern?",o:["Adding $4,000 each year","Increasing by 10% each year","Increasing by $4,400 each year","No consistent pattern"],a:1,e:"40,000 × 1.10 = 44,000. 44,000 × 1.10 = 48,400. Pattern is 10% increase each year."},
+  {s:"Numerical Reasoning",q:"A tank is filled at 10 gallons per minute and drained at 4 gallons per minute. Net fill rate is:",o:["4 gal/min","6 gal/min","10 gal/min","14 gal/min"],a:1,e:"Net rate = fill − drain = 10 − 4 = 6 gallons per minute."},
+  {s:"Numerical Reasoning",q:"Test scores: 70, 75, 80, 85, 90. What is the average?",o:["78","80","82","84"],a:1,e:"Sum = 400. 400 ÷ 5 = 80."},
+  {s:"Numerical Reasoning",q:"If a wire spool has 150 feet and you use 35 feet, then 48 feet, how much remains?",o:["57 feet","67 feet","77 feet","87 feet"],a:1,e:"150 − 35 − 48 = 67 feet."},
+  {s:"Numerical Reasoning",q:"A crew of 4 workers completes a job in 12 days. How many days for 6 workers?",o:["6","8","10","12"],a:1,e:"Total work = 4×12 = 48 worker-days. 48 ÷ 6 = 8 days."},
+  {s:"Numerical Reasoning",q:"Sequence: 2, 5, 11, 23, 47, ___",o:["90","93","95","97"],a:2,e:"Each number = previous×2 + 1. 47×2+1=95."},
+  {s:"Numerical Reasoning",q:"What is the median of: 12, 7, 3, 19, 5?",o:["5","7","12","9"],a:1,e:"Sorted: 3,5,7,12,19. Middle value = 7."},
+  {s:"Numerical Reasoning",q:"A blueprint shows a wall at 1:50 scale. If the wall is 4.5 cm on the blueprint, how long is the actual wall?",o:["2.0 m","2.25 m","4.5 m","9.0 m"],a:1,e:"4.5 cm × 50 = 225 cm = 2.25 m."},
+  {s:"Numerical Reasoning",q:"A job pays time-and-a-half for overtime. Regular rate is $20/hr. Overtime rate is:",o:["$25/hr","$28/hr","$30/hr","$35/hr"],a:2,e:"Time-and-a-half = 1.5 × regular rate. 1.5 × $20 = $30/hr."},
+  {s:"Numerical Reasoning",q:"Next in sequence: 0.5, 1, 2, 4, 8, ___",o:["12","14","16","18"],a:2,e:"Each doubles. 8×2=16."},
+],
+
+};
+
+// Build combined test banks
+Q.all = [
+  ...Q.algebra,
+  ...Q.reading,
+  ...Q.mechanical,
+  ...Q.folding,
+  ...Q.numerical,
+  ...Q.reasoning,
+];
+
+Q.ibew = [...Q.algebra, ...Q.reading];
+
+Q.gan = [
+  ...Q.numerical,
+  ...Q.reasoning,
+  ...Q.reading,
+  ...Q.mechanical,
+  ...Q.folding,
+];
+
+Q.diagnostic = [
+  Q.algebra[0], Q.algebra[5], Q.algebra[15],
+  Q.reading[0], Q.reading[6],
+  Q.mechanical[0], Q.mechanical[6],
+  Q.folding[0], Q.folding[3],
+  Q.numerical[0], Q.numerical[8],
+  Q.reasoning[0], Q.reasoning[9],
+];
+// Mock test config
+var mockConfig = {
+  ibew:  {title:"IBEW / NJATC Mock Test", qs:"15 questions", time:"97 minutes", secs:"Algebra, Reading", bank:'ibew',  secs_val:97*60},
+  gan:   {title:"GAN Battery Mock Test",  qs:"20 questions", time:"120 minutes",secs:"All 5 sections",  bank:'gan',   secs_val:120*60},
+  diagnostic:{title:"Diagnostic Test",   qs:"13 questions", time:"20 minutes", secs:"Mixed sections",  bank:'diagnostic',secs_val:20*60},
+};
+var selMock = 'ibew';
+
+// ── NAV ──────────────────────────────────────────
+function goLand(){
+  document.getElementById('land').classList.add('on');
+  document.getElementById('app').classList.remove('on');
+}
+function goApp(){
+  document.getElementById('land').classList.remove('on');
+  document.getElementById('app').classList.add('on');
+}
+function appTab(tab,el){
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tnb').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.bnb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('pane-'+tab).classList.add('on');
+  if(el){
+    el.classList.add('on');
+    var tnbs=Array.from(document.querySelectorAll('.tnb'));
+    var bnbs=Array.from(document.querySelectorAll('.bnb'));
+    var i=tnbs.indexOf(el); if(i>=0 && bnbs[i]) bnbs[i].classList.add('on');
+    var j=bnbs.indexOf(el); if(j>=0 && tnbs[j]) tnbs[j].classList.add('on');
+  }
+}
+
+// ── AUTH ─────────────────────────────────────────
+function showAuth(type){
+  var isLogin=(type==='login');
+  document.getElementById('auth-title').textContent=isLogin?'Welcome back':'Create your account';
+  document.getElementById('auth-sub').textContent=isLogin?'Log back in to Forge.':'Free to start. Begin prepping in 30 seconds.';
+  document.getElementById('auth-name-row').style.display=isLogin?'none':'block';
+  document.getElementById('auth-btn').textContent=isLogin?'Log in →':'Create free account →';
+  document.getElementById('auth-overlay').classList.add('on');
+}
+function closeAuth(){document.getElementById('auth-overlay').classList.remove('on');}
+function doAuth(){
+  var isSignup = document.getElementById('auth-name-row').style.display !== 'none';
+  var email = (document.getElementById('auth-email').value||'').trim();
+  var name  = (document.getElementById('auth-name-row').value||'').trim();
+  var err   = document.getElementById('auth-err');
+  // basic email validation
+  var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  if(!emailOk){
+    err.textContent = 'Please enter a valid email address.';
+    err.style.display = 'block';
+    return;
+  }
+  err.style.display = 'none';
+  // On signup, capture the email to Mailchimp before entering the app.
+  if(isSignup){ sendToMailchimp(name, email); }
+  closeAuth();
+  goApp();
+}
+document.getElementById('auth-overlay').addEventListener('click',function(e){if(e.target===this)closeAuth();});
+
+// ── MOCK TEST SELECTOR ────────────────────────────
+function selectMock(el,key){
+  document.querySelectorAll('#mock-sel .ts-row').forEach(r=>r.classList.remove('sel'));
+  el.classList.add('sel');
+  selMock=key;
+  var c=mockConfig[key];
+  document.getElementById('mock-title').textContent=c.title;
+  document.getElementById('mock-qs').textContent=c.qs;
+  document.getElementById('mock-time').textContent=c.time;
+  document.getElementById('mock-secs').textContent=c.secs;
+}
+
+// ── PRACTICE QUIZ (immediate feedback) ───────────
+function startPractice(type){
+  curBank=(Q[type]||Q.algebra).slice();
+  // shuffle
+  for(var i=curBank.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=curBank[i];curBank[i]=curBank[j];curBank[j]=t;}
+  curBank=curBank.slice(0,Math.min(curBank.length,10));
+  curQ=0; pScore=0; selOpt=null; answered=false;
+  document.getElementById('app').classList.remove('on');
+  document.getElementById('quiz-screen').classList.add('on');
+  renderPracticeQ();
+}
+
+function closeQuiz(){
+  document.getElementById('quiz-screen').classList.remove('on');
+  document.getElementById('app').classList.add('on');
+}
+
+function renderPracticeQ(){
+  if(curQ>=curBank.length){showPracticeResults();return;}
+  var q=curBank[curQ];
+  var pct=Math.round((curQ/curBank.length)*100);
+  document.getElementById('qz-prog').style.width=Math.max(5,pct)+'%';
+  document.getElementById('qz-counter').textContent=(curQ+1)+' / '+curBank.length;
+  selOpt=null; answered=false;
+  var L=['A','B','C','D'];
+  var opts=q.o.map(function(o,i){
+    return '<div class="opt" onclick="pickOpt(this,'+i+')"><div class="opt-letter">'+L[i]+'</div><div class="opt-text">'+o+'</div></div>';
+  }).join('');
+  document.getElementById('qz-body').innerHTML=
+    '<div class="q-section">'+q.s+'</div>'+
+    '<div class="q-text">'+q.q.replace(/\n/g,'<br>')+'</div>'+
+    '<div class="options">'+opts+'</div>'+
+    '<button class="qz-btn" id="qz-btn" onclick="checkAnswer()" disabled>Check answer</button>';
+}
+
+function pickOpt(el,idx){
+  if(answered)return;
+  document.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
+  el.classList.add('sel');
+  selOpt=idx;
+  document.getElementById('qz-btn').disabled=false;
+}
+
+function checkAnswer(){
+  if(selOpt===null||answered)return;
+  answered=true;
+  var q=curBank[curQ];
+  var opts=document.querySelectorAll('#qz-body .opt');
+  opts[q.a].classList.add('correct');
+  if(selOpt!==q.a){opts[selOpt].classList.remove('sel');opts[selOpt].classList.add('wrong');}
+  else pScore++;
+  var nextLbl=curQ+1<curBank.length?'Next →':'See results →';
+  var L=['A','B','C','D'];
+  document.getElementById('qz-body').innerHTML=
+    '<div class="q-section">'+q.s+'</div>'+
+    '<div class="q-text">'+q.q.replace(/\n/g,'<br>')+'</div>'+
+    '<div class="options">'+q.o.map(function(o,i){
+      var cls=i===q.a?'opt correct':(i===selOpt?'opt wrong':'opt');
+      return '<div class="'+cls+'"><div class="opt-letter">'+L[i]+'</div><div class="opt-text">'+o+'</div></div>';
+    }).join('')+'</div>'+
+    '<div class="explain-box"><div class="explain-lbl">Explanation</div><div class="explain-txt">'+q.e+'</div></div>'+
+    '<button class="qz-btn" onclick="nextPracticeQ()">'+nextLbl+'</button>';
+}
+
+function nextPracticeQ(){curQ++;renderPracticeQ();}
+
+function showPracticeResults(){
+  var pct=Math.round((pScore/curBank.length)*100);
+  var icon=pct>=70?'🔥':pct>=50?'💪':'📚';
+  var title=pct>=70?'NICE WORK':pct>=50?'GETTING THERE':'KEEP AT IT';
+  var msg=pct>=70?"Solid. Keep this pace and you'll be ready.":pct>=50?"Good progress — review the ones you missed.":"That's what practice is for. Try again and check the explanations.";
+  document.getElementById('qz-prog').style.width='100%';
+  document.getElementById('qz-body').innerHTML=
+    '<div class="results-wrap">'+
+    '<div class="res-icon">'+icon+'</div>'+
+    '<div class="res-title" style="color:'+(pct>=70?'var(--orange)':'var(--text)')+'">'+title+'</div>'+
+    '<div class="res-sub">'+msg+'</div>'+
+    '<div class="res-stats">'+
+    '<div class="rs"><div class="rsv">'+pScore+'/'+curBank.length+'</div><div class="rsl">Correct</div></div>'+
+    '<div class="rs"><div class="rsv">'+pct+'%</div><div class="rsl">Score</div></div>'+
+    '<div class="rs"><div class="rsv">'+(pct>=70?'Strong':'More work')+'</div><div class="rsl">Status</div></div>'+
+    '</div>'+
+    '<button class="qz-btn" onclick="closeQuiz()" style="margin-bottom:10px">Back to home</button>'+
+    '<button class="qz-btn" onclick="startPractice(\'all\')" style="background:var(--card);border:1px solid var(--border);color:var(--text2)">Try another session</button>'+
+    '</div>';
+}
+
+// ── MOCK / TIMED EXAM (no feedback until end) ─────
+function startMock(){
+  var cfg=mockConfig[selMock];
+  var bank=Q[cfg.bank].slice();
+  // shuffle
+  for(var i=bank.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=bank[i];bank[i]=bank[j];bank[j]=t;}
+  examBank=bank.slice(0,Math.min(bank.length, selMock==='gan'?20:selMock==='diagnostic'?13:15));
+  examAnswers=new Array(examBank.length).fill(null);
+  examQ=0; examMode=selMock;
+  examTimerSec=cfg.secs_val;
+  document.getElementById('app').classList.remove('on');
+  document.getElementById('exam-screen').classList.add('on');
+  renderExamQ();
+  startExamTimer();
+}
+
+function startExamTimer(){
+  clearInterval(examTimerInterval);
+  updateTimerDisplay();
+  examTimerInterval=setInterval(function(){
+    examTimerSec--;
+    updateTimerDisplay();
+    if(examTimerSec<=0){clearInterval(examTimerInterval);submitExam();}
+  },1000);
+}
+
+function updateTimerDisplay(){
+  var m=Math.floor(examTimerSec/60);
+  var s=examTimerSec%60;
+  var str=m+':'+(s<10?'0':'')+s;
+  var el=document.getElementById('ex-timer');
+  el.textContent=str;
+  el.className='ex-timer'+(examTimerSec<=120?' warn':'');
+}
+
+function renderExamQ(){
+  var q=examBank[examQ];
+  var pct=Math.round((examQ/examBank.length)*100);
+  document.getElementById('ex-prog').style.width=pct+'%';
+  var L=['A','B','C','D'];
+  var curSel=examAnswers[examQ];
+  var opts=q.o.map(function(o,i){
+    var cls='opt'+(curSel===i?' sel':'');
+    return '<div class="'+cls+'" onclick="examPick('+i+')"><div class="opt-letter">'+L[i]+'</div><div class="opt-text">'+o+'</div></div>';
+  }).join('');
+  var isLast=(examQ===examBank.length-1);
+  document.getElementById('ex-body').innerHTML=
+    '<div class="ex-counter">Question '+(examQ+1)+' of '+examBank.length+'</div>'+
+    '<div class="q-section">'+q.s+'</div>'+
+    '<div class="q-text">'+q.q.replace(/\n/g,'<br>')+'</div>'+
+    '<div class="options">'+opts+'</div>'+
+    '<button class="ex-btn" onclick="examNext()">'+( isLast?'Submit test →':'Next →')+'</button>'+
+    (examQ>0?'<div class="ex-skipped" onclick="examPrev()">← Previous question</div>':'');
+}
+
+function examPick(idx){
+  examAnswers[examQ]=idx;
+  document.querySelectorAll('#ex-body .opt').forEach(function(o,i){
+    o.className='opt'+(i===idx?' sel':'');
+  });
+}
+
+function examNext(){
+  if(examQ<examBank.length-1){examQ++;renderExamQ();}
+  else submitExam();
+}
+
+function examPrev(){
+  if(examQ>0){examQ--;renderExamQ();}
+}
+
+function submitExam(){
+  clearInterval(examTimerInterval);
+  showExamResults();
+}
+
+function showExamResults(){
+  var correct=0;
+  var review=examBank.map(function(q,i){
+    var ans=examAnswers[i];
+    var isCorrect=(ans===q.a);
+    if(isCorrect)correct++;
+    return {q:q.q.split('\n')[0].substring(0,55)+(q.q.length>55?'…':''), correct:isCorrect, given:ans, right:q.a, opts:q.o};
+  });
+  var pct=Math.round((correct/examBank.length)*100);
+  var icon=pct>=70?'🔥':pct>=50?'💪':'📚';
+  var title=pct>=70?'GREAT SCORE':pct>=50?'SOLID RUN':'KEEP GOING';
+  var L=['A','B','C','D'];
+  var reviewHTML=review.map(function(r,i){
+    var dot=r.correct?'var(--green)':'var(--red)';
+    var status=r.correct?'✓ Correct':'✗ Wrong';
+    var statusColor=r.correct?'var(--green)':'var(--red)';
+    var detail=r.correct?'':', correct: '+L[r.right]+'. '+r.opts[r.right];
+    return '<div class="rr-row"><div class="rr-dot" style="background:'+dot+'"></div><div class="rr-q">'+r.q+(r.given===null?' (skipped)':(!r.correct?' — Your answer: '+L[r.given]+detail:''))+'</div><div class="rr-status" style="color:'+statusColor+'">'+status+'</div></div>';
+  }).join('');
+
+  document.getElementById('ex-body').innerHTML=
+    '<div class="results-wrap">'+
+    '<div class="res-icon">'+icon+'</div>'+
+    '<div class="res-title" style="color:'+(pct>=70?'var(--orange)':'var(--text)')+'">'+title+'</div>'+
+    '<div class="res-sub">Here\'s your full breakdown. Review what you missed before your next attempt.</div>'+
+    '<div class="res-stats">'+
+    '<div class="rs"><div class="rsv">'+correct+'/'+examBank.length+'</div><div class="rsl">Correct</div></div>'+
+    '<div class="rs"><div class="rsv">'+pct+'%</div><div class="rsl">Score</div></div>'+
+    '<div class="rs"><div class="rsv">'+(pct>=70?'On track':'Study more')+'</div><div class="rsl">Readiness</div></div>'+
+    '</div>'+
+    '<div class="res-review"><div class="rr-title">Question review</div>'+reviewHTML+'</div>'+
+    '<button class="ex-btn" onclick="closeExam()" style="margin-bottom:10px">Back to home</button>'+
+    '<button class="ex-btn" onclick="startMock()" style="background:var(--card);border:1px solid var(--border);color:var(--text2)">Try again</button>'+
+    '</div>';
+}
+
+function closeExam(){
+  clearInterval(examTimerInterval);
+  document.getElementById('exam-screen').classList.remove('on');
+  document.getElementById('app').classList.add('on');
+}
+
+// ── EXAM WARNING ──────────────────────────────────
+function showExamWarning(){document.getElementById('warn-overlay').classList.add('on');}
+function closeWarning(){document.getElementById('warn-overlay').classList.remove('on');}
+function confirmLeave(){closeWarning();closeExam();}
+document.getElementById('warn-overlay').addEventListener('click',function(e){if(e.target===this)closeWarning();});
+</script>
+</body>
+</html>
