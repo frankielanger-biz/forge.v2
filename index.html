@@ -10,7 +10,7 @@
 :root{
   --bg:#0a0a0a;--card:#111;--card2:#161616;--border:#1e1e1e;
   --orange:#d4622a;--orange2:#bc5222;--orangedim:#160c06;--orangeborder:#2a1208;
-  --text:#e8e4de;--text2:#8a8680;--text3:#555;--text4:#2a2520;
+  --text:#e8e4de;--text2:#a8a39c;--text3:#847e76;--text4:#2a2520;
   --green:#2db872;--greendim:#091a10;--greenborder:#163325;
   --red:#c96060;--reddim:#160707;
 }
@@ -43,7 +43,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 .tb-streak{font-size:13px;font-weight:700;color:var(--orange);}
 .tb-av{width:32px;height:32px;border-radius:50%;background:var(--orangedim);border:1.5px solid var(--orangeborder);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--orange);cursor:pointer;}
 .tabnav{display:flex;background:var(--bg);border-bottom:1px solid var(--border);position:sticky;top:52px;z-index:40;}
-.tnb{flex:1;padding:13px 4px;font-size:11px;font-weight:700;color:#5a5a5a;cursor:pointer;border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;font-family:'DM Sans',sans-serif;transition:color .15s;white-space:nowrap;}
+.tnb{flex:1;padding:13px 4px;font-size:11px;font-weight:700;color:#8a847c;cursor:pointer;border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;font-family:'DM Sans',sans-serif;transition:color .15s;white-space:nowrap;}
 .tnb.on{color:var(--orange);border-bottom-color:var(--orange);}
 .content{padding:20px 20px 90px;}
 .pane{display:none;}
@@ -219,7 +219,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 .bottomnav{position:fixed;bottom:0;left:0;right:0;background:var(--bg);border-top:1px solid var(--border);display:flex;z-index:100;max-width:480px;margin:0 auto;}
 .bnb{flex:1;padding:10px 6px 14px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;background:none;border:none;font-family:'DM Sans',sans-serif;}
 .bnb-ico{font-size:19px;opacity:.45;transition:opacity .15s;}
-.bnb-lbl{font-size:10px;font-weight:700;color:#5a5a5a;transition:color .15s;}
+.bnb-lbl{font-size:10px;font-weight:700;color:#8a847c;transition:color .15s;}
 .bnb.on .bnb-ico{opacity:1;}
 .bnb.on .bnb-lbl{color:var(--orange);}
 
@@ -346,7 +346,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
         </div>
         <div class="mi-note">⚠️ During a mock test you won't see if answers are right or wrong until the end — just like the real exam. Your timer counts down the whole way through.</div>
       </div>
-      <button class="go-btn" id="start-mock-btn" onclick="startMock()">Begin mock test →</button>
+      <button class="go-btn" id="start-mock-btn" onclick="askStartMock()">Begin mock test →</button>
     </div>
 
     <!-- PROFILE -->
@@ -370,9 +370,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
         <div class="s3"><div class="s3v">5</div><div class="s3l">Day streak</div></div>
       </div>
       <div class="section-title">Settings</div>
-      <div class="settings-row"><span class="sr-lbl">Test date</span><span class="sr-action">Set date →</span></div>
-      <div class="settings-row"><span class="sr-lbl">Trade focus</span><span class="sr-val">Electrician (IBEW)</span></div>
-      <div class="settings-row"><span class="sr-lbl">Location</span><span class="sr-val">Kalamazoo, MI</span></div>
+      <div class="settings-row" style="cursor:pointer" onclick="openSetting('date')"><span class="sr-lbl">Test date</span><span class="sr-action" id="sr-date">Set date →</span></div>
+      <div class="settings-row" style="cursor:pointer" onclick="openSetting('trade')"><span class="sr-lbl">Trade focus</span><span class="sr-val" id="sr-trade">Electrician (IBEW)</span></div>
+      <div class="settings-row" style="cursor:pointer" onclick="openSetting('loc')"><span class="sr-lbl">Location</span><span class="sr-val" id="sr-loc">Kalamazoo, MI</span></div>
       <div class="settings-row" style="margin-top:8px"><span class="sr-lbl">Sign out</span><span class="sr-action" onclick="goLand()">Sign out</span></div>
     </div>
 
@@ -389,7 +389,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 <!-- PRACTICE QUIZ SCREEN (shows right/wrong immediately) -->
 <div id="quiz-screen">
   <div class="qz-top">
-    <button class="qz-back" onclick="closeQuiz()">‹</button>
+    <button class="qz-back" onclick="askLeaveQuiz()">‹</button>
     <div class="qz-prog-wrap"><div class="qz-prog" id="qz-prog" style="width:5%"></div></div>
     <div class="qz-counter" id="qz-counter">1 / 10</div>
   </div>
@@ -406,7 +406,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
   <div class="ex-body" id="ex-body"></div>
 </div>
 
-<!-- WARNING MODAL -->
+<!-- WARNING MODAL (mock exam) -->
 <div class="overlay" id="warn-overlay">
   <div class="modal-box">
     <div class="modal-handle"></div>
@@ -417,13 +417,62 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
   </div>
 </div>
 
+<!-- LEAVE MODAL (practice quiz) -->
+<div class="overlay" id="quizleave-overlay">
+  <div class="modal-box">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Leave this practice set?</div>
+    <div class="modal-desc">Your progress in this set won't be saved. Are you sure you want to leave?</div>
+    <button class="modal-btn modal-btn-danger" onclick="confirmLeaveQuiz()">Yes, leave</button>
+    <button class="modal-btn modal-btn-cancel" onclick="closeQuizLeave()">Keep going</button>
+  </div>
+</div>
+
+<!-- SETTINGS EDIT MODAL -->
+<div class="overlay" id="set-overlay">
+  <div class="modal-box" style="border-top:2px solid var(--orange)">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="set-title">Edit</div>
+    <div class="modal-desc" id="set-desc" style="margin-bottom:14px;"></div>
+    <input class="ainput" id="set-input-text" placeholder="" style="display:none;">
+    <input class="ainput" id="set-input-date" type="date" style="display:none;">
+    <select class="ainput" id="set-input-trade" style="display:none;">
+      <option>Electrician (IBEW)</option>
+      <option>Electrician (IEC)</option>
+      <option>Plumber (UA)</option>
+      <option>Pipefitter (UA)</option>
+      <option>Sheet Metal (SMART)</option>
+      <option>Elevator (IUEC)</option>
+      <option>Ironworker</option>
+      <option>Carpenter</option>
+      <option>Other trade</option>
+    </select>
+    <button class="modal-btn" style="background:var(--orange);color:#fff" onclick="saveSetting()">Save</button>
+    <button class="modal-btn modal-btn-cancel" onclick="closeSetting()">Cancel</button>
+  </div>
+</div>
+
+<!-- START CONFIRM MODAL (mock exam) -->
+<div class="overlay" id="start-overlay">
+  <div class="modal-box" style="border-top:2px solid var(--orange)">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Ready to begin?</div>
+    <div class="modal-desc">The clock starts the moment you begin and counts down the whole way through. You won't see if answers are right or wrong until the end — just like the real exam.</div>
+    <button class="modal-btn" style="background:var(--orange);color:#fff" onclick="reallyStartMock()">Start now — clock begins</button>
+    <button class="modal-btn modal-btn-cancel" onclick="closeStart()">Not yet</button>
+  </div>
+</div>
+
 <!-- AUTH MODAL -->
 <div class="auth-overlay" id="auth-overlay">
   <div class="auth-box">
     <div class="auth-handle"></div>
     <div class="auth-title" id="auth-title">Create your account</div>
     <div class="auth-sub" id="auth-sub">Free to start. Begin prepping in 30 seconds.</div>
-    <input class="ainput" id="auth-name-row" placeholder="Your name">
+    <div id="auth-name-row" style="display:flex;gap:10px;">
+      <input class="ainput" id="auth-first" placeholder="First name" style="margin-bottom:10px;">
+      <input class="ainput" id="auth-last" placeholder="Last name" style="margin-bottom:10px;">
+    </div>
     <input class="ainput" id="auth-email" placeholder="Email address" type="email">
     <input class="ainput" id="auth-password" placeholder="Password" type="password">
     <div class="auth-err" id="auth-err" style="display:none;color:#ff6b5b;font-size:13px;text-align:center;margin:4px 0;"></div>
@@ -434,21 +483,38 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 
 <script>
 // ════════════════════════════════════════════════════════════════════════════
-// FORMSPREE SETUP — signups are sent here (name + email).
-// View them at formspree.io → Forge Sign-up → Submissions.
+// MAILCHIMP SETUP — paste your form ACTION URL between the quotes below.
+// Get it in Mailchimp: Audience → Signup forms → Embedded forms → copy the
+// <form action="..."> URL. It looks like:
+//   https://YOURNAME.usXX.list-manage.com/subscribe/post?u=XXXXXXXX&id=YYYYYYYY
+// Leave it blank to test the app without collecting emails.
 // ════════════════════════════════════════════════════════════════════════════
-var FORMSPREE_URL = "https://formspree.io/f/maqgobkv";
+var MAILCHIMP_URL = "https://gmail.us19.list-manage.com/subscribe/post?u=b3202a5d4ca20cb7875083390&id=ad209e5ef4&f_id=00ce76e7f0";
+var MAILCHIMP_BOT_FIELD = "b_b3202a5d4ca20cb7875083390_ad209e5ef4";
 
-// Sends name + email to Formspree via background fetch (no redirect, no blocking).
+// Sends name + email to Mailchimp using the /post-json + JSONP method.
+// This works cross-origin (including from file:// and any host) because
+// JSONP loads via a <script> tag instead of a blocked fetch/POST.
 function sendToMailchimp(name, email){
-  if(!FORMSPREE_URL){ return; }
+  if(!MAILCHIMP_URL){ return; }
   try{
-    fetch(FORMSPREE_URL, {
-      method: "POST",
-      headers: { "Accept": "application/json", "Content-Type": "application/json" },
-      body: JSON.stringify({ email: email, name: name || "" })
-    }).catch(function(){ /* never block the user on a capture failure */ });
-  }catch(e){ /* ignore */ }
+    var jsonpUrl = MAILCHIMP_URL.replace('/post?', '/post-json?');
+    var cb = 'mc_cb_' + Date.now();
+    var params =
+      '&EMAIL=' + encodeURIComponent(email) +
+      '&FNAME=' + encodeURIComponent(name||'') +
+      (MAILCHIMP_BOT_FIELD ? '&' + MAILCHIMP_BOT_FIELD + '=' : '') +
+      '&c=' + cb;
+    window[cb] = function(resp){
+      try{ delete window[cb]; }catch(e){ window[cb] = undefined; }
+      if(s && s.parentNode){ s.parentNode.removeChild(s); }
+      // resp.result is "success" or "error"; we don't block the user either way
+    };
+    var s = document.createElement('script');
+    s.src = jsonpUrl + params;
+    s.onerror = function(){ if(s.parentNode){ s.parentNode.removeChild(s); } };
+    document.body.appendChild(s);
+  }catch(e){ /* never block the user on a capture failure */ }
 }
 
 // ── FORGE COMPLETE TEST BANK ──────────────────────────────────────────────────
@@ -869,15 +935,17 @@ function showAuth(type){
   var isLogin=(type==='login');
   document.getElementById('auth-title').textContent=isLogin?'Welcome back':'Create your account';
   document.getElementById('auth-sub').textContent=isLogin?'Log back in to Forge.':'Free to start. Begin prepping in 30 seconds.';
-  document.getElementById('auth-name-row').style.display=isLogin?'none':'block';
+  document.getElementById('auth-name-row').style.display=isLogin?'none':'flex';
   document.getElementById('auth-btn').textContent=isLogin?'Log in →':'Create free account →';
   document.getElementById('auth-overlay').classList.add('on');
 }
 function closeAuth(){document.getElementById('auth-overlay').classList.remove('on');}
 function doAuth(){
   var isSignup = document.getElementById('auth-name-row').style.display !== 'none';
+  var first = (document.getElementById('auth-first').value||'').trim();
+  var last  = (document.getElementById('auth-last').value||'').trim();
   var email = (document.getElementById('auth-email').value||'').trim();
-  var name  = (document.getElementById('auth-name-row').value||'').trim();
+  var name  = (first+' '+last).trim();
   var err   = document.getElementById('auth-err');
   // basic email validation
   var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -1116,6 +1184,79 @@ function showExamWarning(){document.getElementById('warn-overlay').classList.add
 function closeWarning(){document.getElementById('warn-overlay').classList.remove('on');}
 function confirmLeave(){closeWarning();closeExam();}
 document.getElementById('warn-overlay').addEventListener('click',function(e){if(e.target===this)closeWarning();});
+
+// ── PRACTICE QUIZ LEAVE CONFIRM ───────────────────
+function askLeaveQuiz(){document.getElementById('quizleave-overlay').classList.add('on');}
+function closeQuizLeave(){document.getElementById('quizleave-overlay').classList.remove('on');}
+function confirmLeaveQuiz(){closeQuizLeave();closeQuiz();}
+document.getElementById('quizleave-overlay').addEventListener('click',function(e){if(e.target===this)closeQuizLeave();});
+
+// ── PROFILE SETTINGS (persisted) ──────────────────
+var _setField=null;
+function openSetting(field){
+  _setField=field;
+  var t=document.getElementById('set-title');
+  var d=document.getElementById('set-desc');
+  var txt=document.getElementById('set-input-text');
+  var dt=document.getElementById('set-input-date');
+  var tr=document.getElementById('set-input-trade');
+  txt.style.display='none'; dt.style.display='none'; tr.style.display='none';
+  if(field==='date'){
+    t.textContent='Set your test date';
+    d.textContent='Pick the day of your exam. Forge will show your countdown.';
+    dt.style.display='block';
+    dt.value=localStorage.getItem('forge_date')||'';
+  } else if(field==='trade'){
+    t.textContent='Trade focus';
+    d.textContent='Choose the trade you\'re prepping for.';
+    tr.style.display='block';
+    tr.value=localStorage.getItem('forge_trade')||'Electrician (IBEW)';
+  } else if(field==='loc'){
+    t.textContent='Your location';
+    d.textContent='City and state — used to tailor your prep.';
+    txt.style.display='block';
+    txt.placeholder='e.g. Kalamazoo, MI';
+    txt.value=localStorage.getItem('forge_loc')||'';
+  }
+  document.getElementById('set-overlay').classList.add('on');
+}
+function closeSetting(){document.getElementById('set-overlay').classList.remove('on');}
+function saveSetting(){
+  if(_setField==='date'){
+    var v=document.getElementById('set-input-date').value;
+    if(v){localStorage.setItem('forge_date',v);}
+  } else if(_setField==='trade'){
+    var v=document.getElementById('set-input-trade').value;
+    localStorage.setItem('forge_trade',v);
+  } else if(_setField==='loc'){
+    var v=document.getElementById('set-input-text').value.trim();
+    if(v){localStorage.setItem('forge_loc',v);}
+  }
+  applySettings();
+  closeSetting();
+}
+function applySettings(){
+  var d=localStorage.getItem('forge_date');
+  var tr=localStorage.getItem('forge_trade');
+  var loc=localStorage.getItem('forge_loc');
+  var dEl=document.getElementById('sr-date');
+  if(d && dEl){
+    var days=Math.ceil((new Date(d)-new Date())/(1000*60*60*24));
+    var pretty=new Date(d+'T00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    dEl.textContent = days>0 ? pretty+' ('+days+'d)' : pretty;
+    dEl.className='sr-val';
+  }
+  if(tr){var trEl=document.getElementById('sr-trade'); if(trEl)trEl.textContent=tr;}
+  if(loc){var lEl=document.getElementById('sr-loc'); if(lEl)lEl.textContent=loc;}
+}
+document.getElementById('set-overlay').addEventListener('click',function(e){if(e.target===this)closeSetting();});
+applySettings();
+
+// ── MOCK START CONFIRM ────────────────────────────
+function askStartMock(){document.getElementById('start-overlay').classList.add('on');}
+function closeStart(){document.getElementById('start-overlay').classList.remove('on');}
+function reallyStartMock(){closeStart();startMock();}
+document.getElementById('start-overlay').addEventListener('click',function(e){if(e.target===this)closeStart();});
 </script>
 </body>
 </html>
