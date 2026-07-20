@@ -55,7 +55,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'IBM Pl
 .tabnav{display:flex;background:var(--bg);border-bottom:1px solid var(--border);position:sticky;top:56px;z-index:40;}
 .tnb{flex:1;padding:13px 4px;font-size:11px;font-weight:700;color:#8a847c;cursor:pointer;border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;font-family:'IBM Plex Sans',sans-serif;transition:color .15s;white-space:nowrap;}
 .tnb.on{color:var(--orange);border-bottom-color:var(--orange);}
-.content{padding:20px 20px 90px;}
+#app.screen.on{display:flex;flex-direction:column;}
+.content{padding:20px 20px 90px;flex:1;overflow-y:auto;}
 .pane{display:none;}
 .pane.on{display:block;}
 
@@ -234,16 +235,18 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'IBM Pl
 .pw-meter-fill{height:100%;width:0%;transition:width .15s,background .15s;}
 
 /* BOTTOM NAV */
-.bottomnav{position:fixed;bottom:0;left:0;right:0;background:var(--bg);border-top:1px solid var(--border);display:flex;z-index:100;max-width:480px;margin:0 auto;}
+.bottomnav{position:sticky;bottom:0;left:0;right:0;background:var(--bg);border-top:1px solid var(--border);display:flex;z-index:100;margin-top:auto;flex-shrink:0;}
 .bnb{flex:1;padding:10px 6px 14px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;background:none;border:none;font-family:'IBM Plex Sans',sans-serif;}
 .bnb-ico{font-size:19px;opacity:.45;transition:opacity .15s;}
 .bnb-lbl{font-size:10px;font-weight:700;color:#8a847c;transition:color .15s;}
 .bnb.on .bnb-ico{opacity:1;}
 .bnb.on .bnb-lbl{color:var(--orange);}
 
+html,body{background:#000;}
+#land,#app,#loading{margin:16px auto;max-width:448px;height:calc(100vh - 32px);border-radius:20px;border:1px solid var(--border);overflow:hidden;box-shadow:0 0 0 1px #000, 0 20px 60px rgba(0,0,0,.6);}
+#quiz-screen,#exam-screen{inset:16px;max-width:448px;margin:0 auto;border-radius:20px;border:1px solid var(--border);}
+.bottomnav{border-radius:0 0 19px 19px;}
 @media(min-width:480px){
-  #land,#app,#quiz-screen,#exam-screen,#loading{max-width:480px;margin:0 auto;}
-  .bottomnav{left:50%;transform:translateX(-50%);width:480px;}
   .overlay,.auth-overlay{justify-content:center;align-items:center;}
   .modal-box,.auth-box{border-radius:20px;max-width:400px;border-top:none;}
 }
@@ -832,11 +835,15 @@ document.getElementById('auth-password').addEventListener('input',function(){
   paintPwMeter(this.value,document.getElementById('auth-pw-meter-fill'),document.getElementById('auth-pw-meter'));
 });
 
+// ══════════════════════════════ RATE LIMIT (client-side UX guard) ══════════════════════════════
+// Supabase Auth already rate-limits signup/login server-side. This just prevents
+// rapid repeat taps from the same browser session while a request is in flight.
 var authBusy=false;
 var authFailCount=0;
 var authLockUntil=0;
 
-var authMode='signup';
+// ══════════════════════════════ AUTH ══════════════════════════════
+var authMode='signup'; // signup | login | reset
 
 function showAuth(type){
   authMode=type;
@@ -931,6 +938,14 @@ async function doSignOut(){
   goLand();
 }
 
+// ══════════════════════════════ PROFILE (Supabase table: profiles) ══════════════════════════════
+// Schema (run once in Supabase SQL editor — see supabase-schema.sql):
+//   profiles(id uuid PK references auth.users, first_name text, last_name text,
+//     trade text, test_date date, location text, avatar_url text,
+//     questions_done int default 0, correct_count int default 0, streak int default 0,
+//     updated_at timestamptz default now())
+// RLS: users can only select/update/insert their own row (id = auth.uid()).
+
 async function ensureProfileRow(user, fullName){
   var parts=(fullName||'').split(' ');
   var first=parts[0]||''; var last=parts.slice(1).join(' ')||'';
@@ -1002,6 +1017,7 @@ function renderProfileUI(){
   }
 }
 
+// ── Avatar upload (Supabase Storage bucket: "avatars", public) ──────────
 async function onAvatarSelected(evt){
   var file=evt.target.files[0];
   if(!file) return;
@@ -1021,6 +1037,7 @@ async function onAvatarSelected(evt){
   }catch(e){ alert('Upload failed. Try again.'); }
 }
 
+// ══════════════════════════════ SETTINGS MODAL ══════════════════════════════
 var _setField=null;
 function openSetting(field){
   _setField=field;
@@ -1088,6 +1105,7 @@ async function saveSetting(){
       var nw=document.getElementById('set-input-pw-new').value||'';
       if(passwordScore(nw)<2) return setErr('New password too weak — use 8+ characters with a number.');
       btn.disabled=true; btn.textContent='Saving…';
+      // Re-authenticate with current password before allowing the change
       var reauth=await sb.auth.signInWithPassword({email:currentUser.email,password:cur});
       if(reauth.error){ btn.disabled=false; btn.textContent='Save'; return setErr('Current password is incorrect.'); }
       var res=await sb.auth.updateUser({password:nw});
@@ -1100,6 +1118,7 @@ async function saveSetting(){
 }
 document.getElementById('set-overlay').addEventListener('click',function(e){if(e.target===this)closeSetting();});
 
+// ══════════════════════════════ PRACTICE QUIZ ══════════════════════════════
 var curBank=[],curQ=0,pScore=0,selOpt=null,answered=false;
 
 function startPractice(type){
@@ -1158,6 +1177,7 @@ async function showPracticeResults(){
   await recordProgress(curBank.length,pScore);
 }
 
+// ── Persist stats to Supabase after each session ──
 async function recordProgress(attempted,correct){
   if(!currentUser||!currentProfile) return;
   try{
@@ -1181,6 +1201,7 @@ async function recordProgress(attempted,correct){
   }catch(e){ console.error('progress save failed',e); }
 }
 
+// ══════════════════════════════ TIMED MOCK EXAM ══════════════════════════════
 var examBank=[],examAnswers=[],examQ=0,examMode='',examTimerSec=0,examTimerInterval=null;
 
 function selectMock(el,key){
@@ -1249,6 +1270,7 @@ function closeWarning(){document.getElementById('warn-overlay').classList.remove
 function confirmLeave(){closeWarning();closeExam();}
 document.getElementById('warn-overlay').addEventListener('click',function(e){if(e.target===this)closeWarning();});
 
+// ══════════════════════════════ SESSION BOOTSTRAP ══════════════════════════════
 (async function initSession(){
   try{
     var sess=await sb.auth.getSession();
